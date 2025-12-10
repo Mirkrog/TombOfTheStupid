@@ -1,16 +1,26 @@
-object = require("classic/classic")
+Object = require("classic/classic")
+Player = require("Player")
+Camera = require("Util/Camera")
 
-Level = object:extend()
+Level = Object:extend()
 
 function Level:new()
 	self.grid = {}
+	self.player = Player()
+	self.camera = Camera()
+	self.camera:setTarget(self.player)
+end
+
+function Level:update(dt)
+	self.player:update(dt)
+	self.camera:update(dt)
 end
 
 function Level:get(x, y)
-	if grid[x] == nil then
+	if self.grid[x] == nil then
 		return
 	end
-	return grid[x][y]
+	return self.grid[x][y]
 end
 
 function Level:set(x, y, r, tileName)
@@ -20,11 +30,23 @@ function Level:set(x, y, r, tileName)
 	if self.grid[x] == nil then
 		self.grid[x] = {}
 	end
-	self.grid[x][y] = Tile:new(x, y, r)
+	self.grid[x][y] = Tile(x, y, r)
 end
 
 function Level:draw()
-	self.grid[0][0]:draw(50)
+	self.camera:apply(50)
+
+	for x, rows in pairs(self.grid) do
+		for y, tile in pairs(rows) do
+			if tile then
+				tile:draw(50)
+			end
+		end
+	end
+
+	self.player:draw(50)
+
+	self.camera:unapply()
 end
 
 return Level

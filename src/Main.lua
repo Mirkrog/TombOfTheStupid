@@ -1,16 +1,17 @@
+
 function love.load()
 	Level = require("Level")
-	Player = require("Player")
 
 	level = Level()
-	player = Level:new()
 
-	level:set(0, 0, 0, "Tile")
+	level:set(0, 0, 0, "Wall")
+	level:set(1, 0, 0, "Wall")
+	level:set(2, 0, 0, "Wall")
 
 end
 
 function love.update(dt)
-
+	level:update(dt)
 end
 
 function love.draw()
