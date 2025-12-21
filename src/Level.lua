@@ -6,9 +6,13 @@ Level = Object:extend()
 
 function Level:new()
 	self.grid = {}
-	self.player = Player()
+	self.player = Player(self)
 	self.camera = Camera()
 	self.camera:setTarget(self.player)
+end
+
+function Level:__tostring()
+	return "Level"
 end
 
 function Level:update(dt)

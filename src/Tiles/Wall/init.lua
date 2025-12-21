@@ -6,6 +6,7 @@ function Wall:new(x, y, r)
 	self.x = x 
 	self.y = y 
 	self.r = r 
+	self.collision = true
 end
 
 function Wall:__tostring()

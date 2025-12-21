@@ -6,6 +6,7 @@ function Tile:new(x, y, r)
 	self.x = x 
 	self.y = y 
 	self.r = r 
+	self.collision = false
 end
 
 function Tile:__tostring()

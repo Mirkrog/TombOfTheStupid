@@ -4,9 +4,16 @@ function love.load()
 
 	level = Level()
 
-	level:set(0, 0, 0, "Wall")
 	level:set(1, 0, 0, "Wall")
-	level:set(2, 0, 0, "Wall")
+	level:set(1, 1, 0, "Wall")
+	level:set(1, 2, 0, "Wall")
+	level:set(-2, 0, 0, "Wall")
+	level:set(-2, 1, 0, "Wall")
+	level:set(-2, 2, 0, "Wall")
+	level:set(0, 3, 0, "Wall")
+	level:set(0, -1, 0, "Wall")
+	level:set(-1, 3, 0, "Wall")
+	level:set(-1, -1, 0, "Wall")
 
 end
 
