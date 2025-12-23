@@ -1,20 +1,17 @@
 
 function love.load()
 	Level = require("Level")
+	Room = require("Rooms/Room")
 
 	level = Level()
+	room = Room(level)
 
-	level:set(1, 0, 0, "Wall")
-	level:set(1, 1, 0, "Wall")
-	level:set(1, 2, 0, "Wall")
-	level:set(-2, 0, 0, "Wall")
-	level:set(-2, 1, 0, "Wall")
-	level:set(-2, 2, 0, "Wall")
-	level:set(0, 3, 0, "Wall")
-	level:set(0, -1, 0, "Wall")
-	level:set(-1, 3, 0, "Wall")
-	level:set(-1, -1, 0, "Wall")
-
+	room:cursorPlaceTile("Wall", 0)
+	room:moveCursorForward(2)
+	room:cursorPlaceTile("Wall", 0)
+	room:turnCursorRight()
+	room:moveCursorForward()
+	room:cursorPlaceTile("Wall", 0)
 end
 
 function love.update(dt)

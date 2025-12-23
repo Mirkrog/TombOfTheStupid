@@ -9,7 +9,7 @@ function Player:new(level)
 	self.dy = 0
 	self.direction = 0
 
-	self.speed = 10
+	self.speed = 30
 
 	self.level = level
 end
@@ -61,9 +61,6 @@ function Player:update(dt)
 			for y = self.y, self.y + my, math.min(math.abs(my), 1) * my / math.abs(my) do
 
 				local tile = self.level:get(bidirectionalceil(x), bidirectionalceil(y))
-				print(mx, my)
-				print(x, y)
-				print(bidirectionalceil(x), bidirectionalceil(y))
 
 				if tile and tile.collision == true then
 					self.x = tile.x - (mx ~= 0 and (mx / math.abs(mx)) or 0)
@@ -92,7 +89,7 @@ function Player:update(dt)
 end
 
 function Player:draw(scale)
-	love.graphics.setColor(1, 0.5, 0.5)
+	love.graphics.setColor( 255 / 255,201 / 255,51 / 255)
 
 	love.graphics.circle("fill", self.x * scale, self.y * scale, scale / 2, scale / 2)
 end

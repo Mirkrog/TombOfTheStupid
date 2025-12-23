@@ -14,7 +14,7 @@ function Wall:__tostring()
 end
 
 function Wall:draw(scale)
-	love.graphics.setColor(0, 0, 1)
+	love.graphics.setColor( 177 / 255,74 / 255,237 / 255)
 
 	love.graphics.rectangle("fill", self.x * scale - 0.5 * scale, self.y * scale - 0.5 * scale, scale, scale)
 end

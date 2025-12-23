@@ -28,13 +28,19 @@ function Level:get(x, y)
 end
 
 function Level:set(x, y, r, tileName)
-
 	Tile = require("Tiles/" .. tileName)
 
 	if self.grid[x] == nil then
 		self.grid[x] = {}
 	end
 	self.grid[x][y] = Tile(x, y, r)
+end
+
+function Level:remove(x, y)
+	if self.grid[x] == nil then
+		return
+	end
+	self.grid[x][y] = nil
 end
 
 function Level:draw()
@@ -51,6 +57,10 @@ function Level:draw()
 	self.player:draw(50)
 
 	self.camera:unapply()
+end
+
+function Level:generate()
+
 end
 
 return Level
