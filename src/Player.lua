@@ -1,5 +1,6 @@
-Object = require("classic/classic")
+local Object = require("classic/classic")
 
+---@class Player : Object
 local Player = Object:extend()
 
 function Player:new(level)

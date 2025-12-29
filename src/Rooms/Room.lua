@@ -1,10 +1,11 @@
-Object = require("classic/classic")
+local Object = require("classic/classic")
 
 --[[
 Utility to make generation of Rooms easier
 by having a object you can apply operations to
 ]]
-Room = Object:extend()
+---@class Room : Object
+local Room = Object:extend()
 
 function Room:new(level)
 	self.level = level
@@ -32,10 +33,12 @@ function Room:revertTiles()
 end
 
 function Room:setOrigin(x, y, r)
-	self.anchor.x = x
-	self.anchor.y = y
+	self.origin.x = x
+	self.origin.y = y
+	self.origin.r = r
 	self.cursor.x = x
 	self.cursor.y = y
+	self.cursor.r = r
 end
 
 function Room:setCursorPos(x, y)
@@ -84,12 +87,16 @@ function Room:getCursorPosX()
 	return self.cursor.x
 end
 
-function Room:getCursorPosX()
+function Room:getCursorPosY()
 	return self.cursor.y
 end
 
 function Room:getCursorRot()
 	return self.cursor.r
+end
+
+function Room:getCursorData()
+	return self.cursor.x, self.cursor.y, self.cursor.r
 end
 
 function Room:moveCursorForward(amount)
@@ -131,7 +138,7 @@ function Room:trySetTile(x, y, r, tileName)
 	if self.level:get(x, y) ~= nil and self.level:get(x, y):is(require("Tiles/Tile")) then
 		error("RoomOverlaps")
 	else
-		self.level:set(x, y, r, tileName)
+		self.tiles[#self.tiles + 1] = self.level:set(x, y, r, tileName)
 	end
 end
 

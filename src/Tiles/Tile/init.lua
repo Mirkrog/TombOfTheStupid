@@ -1,6 +1,7 @@
-Object = require("classic/classic")
+local Object = require("classic/classic")
 
-Tile = Object:extend()
+---@class Tile : Object
+local Tile = Object:extend()
 
 function Tile:new(x, y, r)
 	self.x = x 
@@ -13,8 +14,9 @@ function Tile:__tostring()
   	return "Tile"
 end
 
+---@diagnostic disable-next-line: unused-local
 function Tile:draw(scale)
-	love.graphics.rectangle("line", self.x * scale - 0.5 * scale, self.y * scale - 0.5 * scale, scale, scale)
+	return
 end
 
 return Tile

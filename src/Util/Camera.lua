@@ -1,12 +1,13 @@
-Object = require("classic/classic")
+local Object = require("classic/classic")
 
-Camera = Object:extend()
+---@class Camera : Object
+local Camera = Object:extend()
 
-function Camera:new()
-	self.x = 0 
-	self.y = 0 
+function Camera:new(lerp)
+	self.x = 0
+	self.y = 0
 
-	self.lerp = 0.1
+	self.lerp = lerp
 
 	self.target = nil
 end

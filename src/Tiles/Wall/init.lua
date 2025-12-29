@@ -1,6 +1,7 @@
-Tile = require("Tiles/Tile")
+local Tile = require("Tiles/Tile")
 
-Wall = Tile:extend()
+---@class Wall : Tile
+local Wall = Tile:extend()
 
 function Wall:new(x, y, r)
 	self.x = x 

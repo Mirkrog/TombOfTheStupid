@@ -1,10 +1,10 @@
-function love.load()
-	Level = require("Level")
-	Room = require("Rooms/Room")
+local Level = require("Level")
 
+local level
+
+function love.load()
 	level = Level()
-	room = Room(level)
-	
+	level:generate()
 end
 
 function love.update(dt)

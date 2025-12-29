@@ -1,13 +1,14 @@
-Object = require("classic/classic")
-Player = require("Player")
-Camera = require("Util/Camera")
+local Object = require("classic/classic")
+local Player = require("Player")
+local Camera = require("Util/Camera")
 
-Level = Object:extend()
+---@class Level : Object
+local Level = Object:extend()
 
 function Level:new()
 	self.grid = {}
 	self.player = Player(self)
-	self.camera = Camera()
+	self.camera = Camera(0.1)
 	self.camera:setTarget(self.player)
 end
 
@@ -33,7 +34,9 @@ function Level:set(x, y, r, tileName)
 	if self.grid[x] == nil then
 		self.grid[x] = {}
 	end
-	self.grid[x][y] = Tile(x, y, r)
+	local tile = Tile(x, y, r)
+	self.grid[x][y] = tile
+	return tile
 end
 
 function Level:remove(x, y)
@@ -59,8 +62,41 @@ function Level:draw()
 	self.camera:unapply()
 end
 
-function Level:generate()
+local function getRooms()
+	local rooms = {}
+	for i, filename in pairs(love.filesystem.getDirectoryItems("Rooms")) do
+		rooms[#rooms + 1] = require("Rooms/" .. filename:match("(.+)%.[^%.]+$"))
+	end
 
+	return rooms
+end
+
+function Level:generate()
+	local roomstemplates = getRooms()
+
+	local generatedrooms = {}
+	local x, y, r = 0, 0, math.random(0, 3)
+
+	for i = 0, 10 do
+		local success = false
+		local tries = 0
+		while not success and tries < 5 do
+			local room = roomstemplates[math.random(#roomstemplates)](self)
+			room:setOrigin(x, y, r)
+
+			local res
+			success, res = xpcall(room.generate, debug.traceback, room, 10)
+			if not success then
+				if res ~= "RoomOverlaps" then
+					error("Error generating room: " .. room:__tostring() .. "\nError: " .. res)
+				end
+				room:revertTiles()
+			else
+				generatedrooms[#generatedrooms + 1] = room
+				x, y, r = room:getCursorData()
+			end
+		end
+	end
 end
 
 return Level
