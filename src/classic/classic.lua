@@ -52,6 +52,14 @@ function Object:is(T)
   return false
 end
 
+function Object:isExact(T)
+  local mt = getmetatable(self)
+  if mt == T then
+    return true
+  end
+  return false
+end
+
 
 function Object:__tostring()
   return "Object"

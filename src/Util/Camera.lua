@@ -31,8 +31,10 @@ function Camera:move(x, y)
 end
 
 function Camera:update(dt)
-	self.x = self.x + (self.target.x - self.x) * self.lerp 
-	self.y = self.y + (self.target.y - self.y) * self.lerp
+	if self.target then
+		self.x = self.x + (self.target.x - self.x) * self.lerp 
+		self.y = self.y + (self.target.y - self.y) * self.lerp
+	end
 end
 
 function Camera:apply(scale)

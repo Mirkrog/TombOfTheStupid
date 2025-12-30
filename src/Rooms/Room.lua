@@ -27,7 +27,7 @@ function Room:__tostring()
 end
 
 function Room:revertTiles()
-	for tile in pairs(self.tiles) do
+	for i, tile in pairs(self.tiles) do
 		self.level:remove(tile.x, tile.y)
 	end
 end
@@ -39,6 +39,13 @@ function Room:setOrigin(x, y, r)
 	self.cursor.x = x
 	self.cursor.y = y
 	self.cursor.r = r
+end
+
+function Room:getOrigin(x, y, r)
+	return self.origin.x,
+			self.origin.y,
+			self.origin.r
+	
 end
 
 function Room:setCursorPos(x, y)
@@ -133,13 +140,30 @@ function Room:turnCursorLeft(amount)
 	self.cursor.r = (self.cursor.r - amount) % 4
 end
 
+local function tableContains(table, element)
+	for i, value in pairs(table) do
+    	if value == element then
+        	return true
+    	end
+	end
+	return false
+end
+
 function Room:trySetTile(x, y, r, tileName)
 	r = r or 0
-	if self.level:get(x, y) ~= nil and self.level:get(x, y):is(require("Tiles/Tile")) then
-		error("RoomOverlaps")
-	else
-		self.tiles[#self.tiles + 1] = self.level:set(x, y, r, tileName)
+	if self.level:get(x, y) ~= nil then
+		if self.level:get(x, y):isExact(require("Tiles/Tile")) then
+			return
+		end
+		if tableContains(self.tiles, self.level:get(x, y)) then
+			if self.level:get(x, y):isExact(require("Tiles/Path")) then --hardcoded because paths are way markers
+				return
+			end
+		else
+			error("RoomOverlaps")
+		end
 	end
+	self.tiles[#self.tiles + 1] = self.level:set(x, y, r, tileName)
 end
 
 function Room:cursorPlaceTile(tileName, r)

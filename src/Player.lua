@@ -54,37 +54,37 @@ function Player:update(dt)
 			self.dy = 0
 		end
 	end
-	if self.dx ~= 0 or self.dy ~= 0 then
-		local mx = self.dx * self.speed * dt
-		local my = self.dy * self.speed * dt
+	if self.dx == 0 and self.dy == 0 then
+		return
+	end
 
-		for x = self.x, self.x + mx, math.min(math.abs(mx), 1) * mx / math.abs(mx)  do
-			for y = self.y, self.y + my, math.min(math.abs(my), 1) * my / math.abs(my) do
+	local mx = self.dx * self.speed * dt
+	local my = self.dy * self.speed * dt
 
-				local tile = self.level:get(bidirectionalceil(x), bidirectionalceil(y))
+	local watch = os.clock()
+	for x = self.x, self.x + mx, math.min(math.abs(mx), 1) * mx / math.abs(mx)  do
+		for y = self.y, self.y + my, math.min(math.abs(my), 1) * my / math.abs(my) do
 
-				if tile and tile.collision == true then
-					self.x = tile.x - (mx ~= 0 and (mx / math.abs(mx)) or 0)
-					self.y = tile.y - (my ~= 0 and (my / math.abs(my)) or 0)
-		
-					self.dx = 0
-					self.dy = 0
-					break
-				else
-					self.x = x
-					self.y = y
-				end
+			local tile = self.level:get(bidirectionalceil(x), bidirectionalceil(y))
 
-				if my == 0 then
-					break
-				end
+			if tile and tile.collision == true then
+				self.x = tile.x - (mx ~= 0 and (mx / math.abs(mx)) or 0)
+				self.y = tile.y - (my ~= 0 and (my / math.abs(my)) or 0)
+	
+				self.dx = 0
+				self.dy = 0
+				break
+			else
+				self.x = x
+				self.y = y
 			end
-			if mx == 0 then
+
+			if my == 0 then
 				break
 			end
-			if self.dx == 0 and self.dy == 0 then
-				break
-			end
+		end
+		if mx == 0 or self.dx == 0 and self.dy == 0 then
+			break
 		end
 	end
 end

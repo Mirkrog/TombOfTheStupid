@@ -29,6 +29,10 @@ function Level:get(x, y)
 end
 
 function Level:set(x, y, r, tileName)
+	assert(math.floor(x) == x, "x can't be a float it must be an int")
+	assert(math.floor(y) == y, "y can't be a float it must be an int")
+	assert(math.floor(r) == r, "r can't be a float it must be an int")
+
 	Tile = require("Tiles/" .. tileName)
 
 	if self.grid[x] == nil then
@@ -65,7 +69,11 @@ end
 local function getRooms()
 	local rooms = {}
 	for i, filename in pairs(love.filesystem.getDirectoryItems("Rooms")) do
+		if filename == "Room.lua" then
+			goto continue
+		end
 		rooms[#rooms + 1] = require("Rooms/" .. filename:match("(.+)%.[^%.]+$"))
+	    ::continue::
 	end
 
 	return rooms
@@ -77,20 +85,27 @@ function Level:generate()
 	local generatedrooms = {}
 	local x, y, r = 0, 0, math.random(0, 3)
 
-	for i = 0, 10 do
-		local success = false
+	while #generatedrooms < 10 do
+		if #generatedrooms >= 1 then
+			print("Enough attempts failed reverting to last room")
+			local room = generatedrooms[#generatedrooms]
+			room:revertTiles()
+			x, y, r = room:getOrigin()
+			generatedrooms[#generatedrooms] = nil
+		end
 		local tries = 0
-		while not success and tries < 5 do
+		while tries < 5 and #generatedrooms < 10 do
 			local room = roomstemplates[math.random(#roomstemplates)](self)
 			room:setOrigin(x, y, r)
 
-			local res
-			success, res = xpcall(room.generate, debug.traceback, room, 10)
+			local success, res = xpcall(room.generate, debug.traceback, room, 10) -- the "10" is a magic number and its existence must be respected
 			if not success then
-				if res ~= "RoomOverlaps" then
-					error("Error generating room: " .. room:__tostring() .. "\nError: " .. res)
+				if not string.find(res, "RoomOverlaps", 1, true) then
+					error(res)
 				end
+				print("Room failed to generate: " .. room:__tostring())
 				room:revertTiles()
+				tries = tries + 1
 			else
 				generatedrooms[#generatedrooms + 1] = room
 				x, y, r = room:getCursorData()

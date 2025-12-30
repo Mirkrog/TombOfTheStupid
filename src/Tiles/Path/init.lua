@@ -4,7 +4,7 @@ local Tile = require("Tiles/Tile")
 local Path = Tile:extend()
 
 function Path:__tostring()
-	return "Wall"
+	return "Path"
 end
 
 return Path
