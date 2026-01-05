@@ -22,6 +22,8 @@ function Level:update(dt)
 end
 
 function Level:get(x, y)
+	assert(math.floor(x) == x, "x can't be a float it must be an int")
+	assert(math.floor(y) == y, "y can't be a float it must be an int")
 	if self.grid[x] == nil then
 		return
 	end
@@ -103,7 +105,7 @@ function Level:generate()
 				if not string.find(res, "RoomOverlaps", 1, true) then
 					error(res)
 				end
-				print("Room failed to generate: " .. room:__tostring())
+				print("Room failed to generate: " .. room:__tostring() .. " at: " .. x .. ", " .. y .. ", " .. r)
 				room:revertTiles()
 				tries = tries + 1
 			else

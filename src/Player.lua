@@ -24,13 +24,13 @@ function Player:move(dx, dy)
 	self.dy = dy
 end
 
-local function bidirectionalceil(n)
-	if n > 0 then
+local function ceilindir(n, dir)
+	if dir == 1 then
 		return math.ceil(n)
-	elseif n < 0 then
+	elseif dir == -1 then
 		return math.floor(n)
 	else
-		return 0
+		error("Invalid direction" .. dir)
 	end
 end
 
@@ -61,30 +61,34 @@ function Player:update(dt)
 	local mx = self.dx * self.speed * dt
 	local my = self.dy * self.speed * dt
 
-	local watch = os.clock()
-	for x = self.x, self.x + mx, math.min(math.abs(mx), 1) * mx / math.abs(mx)  do
-		for y = self.y, self.y + my, math.min(math.abs(my), 1) * my / math.abs(my) do
+	local distance = math.abs(mx + my)
 
-			local tile = self.level:get(bidirectionalceil(x), bidirectionalceil(y))
+	for i = 1, math.ceil(distance) + 0.1 do
+		local step = math.min(1, math.abs(distance - (i - 1)))
 
-			if tile and tile.collision == true then
-				self.x = tile.x - (mx ~= 0 and (mx / math.abs(mx)) or 0)
-				self.y = tile.y - (my ~= 0 and (my / math.abs(my)) or 0)
-	
-				self.dx = 0
-				self.dy = 0
-				break
-			else
-				self.x = x
-				self.y = y
-			end
+		local nextx, nexty = self.x, self.y
+		local direction = 0
 
-			if my == 0 then
-				break
-			end
+		if mx ~= 0 then
+			direction = (mx / math.abs(mx))
+			nextx = self.x + step * direction
+		else
+			direction = (my / math.abs(my))
+			nexty = self.y + step * direction
 		end
-		if mx == 0 or self.dx == 0 and self.dy == 0 then
-			break
+
+		local tile = self.level:get(ceilindir(nextx, direction), ceilindir(nexty, direction))
+
+		if tile and tile.collision == true then
+			self.x = tile.x - (mx ~= 0 and (mx / math.abs(mx)) or 0)
+			self.y = tile.y - (my ~= 0 and (my / math.abs(my)) or 0)
+
+			self.dx = 0
+			self.dy = 0
+			return
+		else
+			self.x = nextx
+			self.y = nexty
 		end
 	end
 end
