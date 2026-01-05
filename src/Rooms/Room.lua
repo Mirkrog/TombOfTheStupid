@@ -179,28 +179,24 @@ end
 function Room:cursorPlaceTileFrontLeft(tileName, r)
 	r = r or 0
 	local trans1x, trans1y = self.cursor.x + self:getCursorLookVectorX(), self.cursor.y + self:getCursorLookVectorY()
-	print(trans1x, trans1y)
 	self:trySetTile(trans1x + self:getCursorLookVectorY(), trans1y - self:getCursorLookVectorX(), r, tileName)
 end
 
 function Room:cursorPlaceTileFrontRight(tileName, r)
 	r = r or 0
 	local trans1x, trans1y = self.cursor.x + self:getCursorLookVectorX(), self.cursor.y + self:getCursorLookVectorY()
-	print(trans1x, trans1y)
-	self:trySetTile(trans1x - self:getCursorLookVectorY(), trans1y - self:getCursorLookVectorX(), r, tileName)
+	self:trySetTile(trans1x - self:getCursorLookVectorY(), trans1y + self:getCursorLookVectorX(), r, tileName)
 end
 
 function Room:cursorPlaceTileBackLeft(tileName, r)
 	r = r or 0
 	local trans1x, trans1y = self.cursor.x - self:getCursorLookVectorX(), self.cursor.y - self:getCursorLookVectorY()
-	print(trans1x, trans1y)
 	self:trySetTile(trans1x + self:getCursorLookVectorY(), trans1y - self:getCursorLookVectorX(), r, tileName)
 end
 
 function Room:cursorPlaceTileBackRight(tileName, r)
 	r = r or 0
 	local trans1x, trans1y = self.cursor.x - self:getCursorLookVectorX(), self.cursor.y - self:getCursorLookVectorY()
-	print(trans1x, trans1y)
 	self:trySetTile(trans1x - self:getCursorLookVectorY(), trans1y - self:getCursorLookVectorX(), r, tileName)
 end
 
