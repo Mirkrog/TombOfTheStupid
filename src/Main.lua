@@ -4,7 +4,7 @@ local level
 
 function love.load()
 	level = Level()
-	level:generate()
+	level:generate(20)
 end
 
 function love.update(dt)

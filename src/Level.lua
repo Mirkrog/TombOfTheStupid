@@ -71,7 +71,7 @@ end
 local function getRooms()
 	local rooms = {}
 	for i, filename in pairs(love.filesystem.getDirectoryItems("Rooms")) do
-		if filename == "Room.lua" then
+		if filename == "Room.lua" or filename == "Start.lua" then
 			goto continue
 		end
 		rooms[#rooms + 1] = require("Rooms/" .. filename:match("(.+)%.[^%.]+$"))
@@ -81,22 +81,28 @@ local function getRooms()
 	return rooms
 end
 
-function Level:generate()
+function Level:generate(roomcount)
 	local roomstemplates = getRooms()
 
 	local generatedrooms = {}
 	local x, y, r = 0, 0, math.random(0, 3)
 
-	while #generatedrooms < 10 do
+	local watch = os.clock()
+	while #generatedrooms < roomcount do
 		if #generatedrooms >= 1 then
 			print("Enough attempts failed reverting to last room")
 			local room = generatedrooms[#generatedrooms]
 			room:revertTiles()
 			x, y, r = room:getOrigin()
 			generatedrooms[#generatedrooms] = nil
+		else
+			local room = require("Rooms/Start")(self)
+			room:generate(3)
+			generatedrooms[1] = room
+			x, y, r = room:getCursor()
 		end
 		local tries = 0
-		while tries < 5 and #generatedrooms < 10 do
+		while tries < 5 and #generatedrooms < roomcount do
 			local room = roomstemplates[math.random(#roomstemplates)](self)
 			room:setOrigin(x, y, r)
 
@@ -110,10 +116,11 @@ function Level:generate()
 				tries = tries + 1
 			else
 				generatedrooms[#generatedrooms + 1] = room
-				x, y, r = room:getCursorData()
+				x, y, r = room:getCursor()
 			end
 		end
 	end
+	print("Generation finished successfully in: " .. os.clock() - watch .. "s")
 end
 
 return Level

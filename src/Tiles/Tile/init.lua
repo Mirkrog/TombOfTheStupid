@@ -14,6 +14,10 @@ function Tile:__tostring()
   	return "Tile"
 end
 
+function Tile:onCollision(self, player, triggeredneighbour) --triggered neigbor is nil when its the tile itself
+
+end
+
 ---@diagnostic disable-next-line: unused-local
 function Tile:draw(scale)
 	return

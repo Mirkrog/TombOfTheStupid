@@ -1,5 +1,9 @@
 Room = require("Rooms/Room")
 
+--[[
+	A cool Looping
+]]
+--@class Loop: Room
 Loop = Room:extend()
 
 function Loop:generate(length)

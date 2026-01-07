@@ -102,7 +102,7 @@ function Room:getCursorRot()
 	return self.cursor.r
 end
 
-function Room:getCursorData()
+function Room:getCursor()
 	return self.cursor.x, self.cursor.y, self.cursor.r
 end
 

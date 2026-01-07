@@ -10,10 +10,6 @@ function Turn:generate(length)
 	length = length > 3 and length or 3
 	local hasturned = false
 	for i = 1, length do
-		self:cursorPlaceTileLeft("Wall")
-		self:cursorPlaceTileRight("Wall")
-		self:cursorPlaceTile("Path")
-		self:moveCursorForward()
 		if not hasturned and i > math.floor(length / 2) then
 			if math.random(0, 1) == 0 then
 				self:cursorPlaceTileFrontLeft("Wall")
@@ -25,6 +21,10 @@ function Turn:generate(length)
 			self:cursorPlaceTileBack("Wall")
 			hasturned = true
 		end
+		self:cursorPlaceTileLeft("Wall")
+		self:cursorPlaceTileRight("Wall")
+		self:cursorPlaceTile("Path")
+		self:moveCursorForward()
 	end
 end
 
