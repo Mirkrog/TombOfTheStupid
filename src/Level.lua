@@ -45,6 +45,34 @@ function Level:set(x, y, r, tileName)
 	return tile
 end
 
+--[[
+	triggers the onTouch function of the tile at the location
+	and the neighboring
+]]
+function Level:touchTile(player, x, y)
+	local tile = self:get(x, y)
+	if tile then
+		tile:onTouch(player, tile)
+
+		tile = self:get(x + 1, y)
+		if tile ~= nil then
+			tile:onTouch(player, tile)
+		end
+		tile = self:get(x, y - 1)
+		if tile ~= nil then
+			tile:onTouch(player, tile)
+		end
+		tile = self:get(x - 1, y)
+		if tile ~= nil then
+			tile:onTouch(player, tile)
+		end
+		tile = self:get(x, y + 1)
+		if tile ~= nil then
+			tile:onTouch(player, tile)
+		end
+	end
+end
+
 function Level:remove(x, y)
 	if self.grid[x] == nil then
 		return

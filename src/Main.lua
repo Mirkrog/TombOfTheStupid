@@ -1,7 +1,5 @@
 local Level = require("Level")
 
-local level
-
 function love.load()
 	level = Level()
 	level:generate(20)

@@ -1,7 +1,7 @@
 Room = require("Rooms/Room")
 
---[[
-	A cool Looping
+--[[]
+	A Looping
 ]]
 --@class Loop: Room
 Loop = Room:extend()
