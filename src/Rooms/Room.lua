@@ -114,8 +114,8 @@ end
 
 function Room:moveCursorBackwards(amount)
 	amount = amount or 1
-	self.cursor.x = self.cursor.x + self.x + self:getCursorLookVectorX() * amount
-	self.cursor.y = self.cursor.y + self.y + self:getCursorLookVectorY() * amount
+	self.cursor.x = self.cursor.x - self:getCursorLookVectorX() * amount
+	self.cursor.y = self.cursor.y - self:getCursorLookVectorY() * amount
 end
 
 function Room:moveCursorLeft(amount)
@@ -197,7 +197,7 @@ end
 function Room:cursorPlaceTileBackRight(tileName, r)
 	r = r or 0
 	local trans1x, trans1y = self.cursor.x - self:getCursorLookVectorX(), self.cursor.y - self:getCursorLookVectorY()
-	self:trySetTile(trans1x - self:getCursorLookVectorY(), trans1y - self:getCursorLookVectorX(), r, tileName)
+	self:trySetTile(trans1x - self:getCursorLookVectorY(), trans1y + self:getCursorLookVectorX(), r, tileName)
 end
 
 function Room:cursorPlaceTileBack(tileName, r)

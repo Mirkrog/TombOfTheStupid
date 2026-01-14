@@ -24,11 +24,23 @@ end
 
 function Player:kill()
 	self.alive = false
+	self:reset()
 end
 
 function Player:move(dx, dy)
 	self.dx = dx
 	self.dy = dy
+end
+
+function Player:stop()
+	self.dx = 0
+	self.dy = 0
+end
+
+function Player:reset()
+	self:stop()
+	self.x = 0
+	self.y = 0
 end
 
 local function ceilindir(n, dir)
@@ -86,7 +98,6 @@ function Player:update(dt)
 
 		local tile = self.level:get(ceilindir(nextx, direction), ceilindir(nexty, direction))
 		if tile then
-			self.level:touchTile(self, tile.x, tile.y)
 		end
 
 		if tile and tile.collision == true then
@@ -99,6 +110,9 @@ function Player:update(dt)
 		else
 			self.x = nextx
 			self.y = nexty
+		end
+		if self.level:get(tile.x, tile.y) then
+			self.level:touchTile(self, tile.x, tile.y)
 		end
 	end
 end

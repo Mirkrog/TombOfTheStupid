@@ -10,7 +10,7 @@ function Spike:new(x, y, r)
 	self.x = x 
 	self.y = y 
 	self.r = r 
-	self.collision = true
+	self.collision = false
 end
 
 function Spike:__tostring()

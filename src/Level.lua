@@ -52,7 +52,7 @@ end
 function Level:touchTile(player, x, y)
 	local tile = self:get(x, y)
 	if tile then
-		tile:onTouch(player, tile)
+		tile:onTouch(player)
 
 		tile = self:get(x + 1, y)
 		if tile ~= nil then
@@ -110,6 +110,8 @@ local function getRooms()
 end
 
 function Level:generate(roomcount)
+	math.randomseed(os.clock())
+
 	local roomstemplates = getRooms()
 
 	local generatedrooms = {}
