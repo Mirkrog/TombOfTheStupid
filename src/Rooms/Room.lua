@@ -1,8 +1,11 @@
 local Object = require("classic/classic")
 
 --[[
-Utility to make generation of Rooms easier
-by having a object you can apply operations to
+	Utility to make generation of Rooms easier
+	by having a object you can apply operations to.
+	It feels clean, but what do I know.
+	I attempted to make it somewhat debuggable,
+	still extremely frustrating to work with
 ]]
 ---@class Room : Object
 local Room = Object:extend()
@@ -140,6 +143,7 @@ function Room:turnCursorLeft(amount)
 	self.cursor.r = (self.cursor.r - amount) % 4
 end
 
+-- I actually stole this from somewhere I don't remember
 local function tableContains(table, element)
 	for i, value in pairs(table) do
     	if value == element then
@@ -149,14 +153,12 @@ local function tableContains(table, element)
 	return false
 end
 
+-- Inheriting Rooms can technically change this, but it is kinda risky
 function Room:trySetTile(x, y, r, tileName)
 	r = r or 0
 	if self.level:get(x, y) ~= nil then
-		if self.level:get(x, y):isExact(require("Tiles/Tile")) then
-			return
-		end
 		if tableContains(self.tiles, self.level:get(x, y)) then
-			if self.level:get(x, y):isExact(require("Tiles/Path")) then --hardcoded because paths are way markers
+			if self.level:get(x, y):isExact(require("Tiles/Path")) then --hardcoded because paths are way markers and should never be overridden
 				return
 			end
 		else

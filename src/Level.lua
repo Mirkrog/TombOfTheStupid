@@ -21,6 +21,10 @@ function Level:update(dt)
 	self.camera:update(dt)
 end
 
+function Level:clear()
+	self.grid = {}
+end
+
 function Level:get(x, y)
 	assert(math.floor(x) == x, "x can't be a float it must be an int")
 	assert(math.floor(y) == y, "y can't be a float it must be an int")
@@ -99,11 +103,13 @@ end
 local function getRooms()
 	local rooms = {}
 	for i, filename in pairs(love.filesystem.getDirectoryItems("Rooms")) do
-		if filename == "Room.lua" or filename == "Start.lua" then
-			goto continue
+		--[[
+			these are hardcoded because there will only be ever three exceptions.
+			Could clean it up, but I am too lazy
+		]]
+		if filename ~= "Room.lua" and filename ~= "Start.lua" then
+			rooms[#rooms + 1] = require("Rooms/" .. filename:match("(.+)%.[^%.]+$"))
 		end
-		rooms[#rooms + 1] = require("Rooms/" .. filename:match("(.+)%.[^%.]+$"))
-	    ::continue::
 	end
 
 	return rooms
@@ -112,12 +118,15 @@ end
 function Level:generate(roomcount)
 	math.randomseed(os.clock())
 
+	self:clear() -- clearing the level, else fun stuff happens :)
+
 	local roomstemplates = getRooms()
 
 	local generatedrooms = {}
 	local x, y, r = 0, 0, math.random(0, 3)
 
 	local watch = os.clock()
+	local tries = 0
 	while #generatedrooms < roomcount do
 		if #generatedrooms >= 1 then
 			print("Enough attempts failed reverting to last room")
@@ -125,13 +134,13 @@ function Level:generate(roomcount)
 			room:revertTiles()
 			x, y, r = room:getOrigin()
 			generatedrooms[#generatedrooms] = nil
+			tries = 0
 		else
 			local room = require("Rooms/Start")(self)
 			room:generate(3)
 			generatedrooms[1] = room
 			x, y, r = room:getCursor()
 		end
-		local tries = 0
 		while tries < 5 and #generatedrooms < roomcount do
 			local room = roomstemplates[math.random(#roomstemplates)](self)
 			room:setOrigin(x, y, r)
@@ -145,6 +154,7 @@ function Level:generate(roomcount)
 				room:revertTiles()
 				tries = tries + 1
 			else
+				tries = 0
 				generatedrooms[#generatedrooms + 1] = room
 				x, y, r = room:getCursor()
 			end
