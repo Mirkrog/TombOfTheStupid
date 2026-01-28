@@ -162,7 +162,9 @@ function Room:trySetTile(x, y, r, tileName)
 				return
 			end
 		else
-			error("RoomOverlaps")
+			if not _G.tossdebug.allowroomoverlap then
+				error("RoomOverlaps")
+			end
 		end
 	end
 	self.tiles[#self.tiles + 1] = self.level:set(x, y, r, tileName)

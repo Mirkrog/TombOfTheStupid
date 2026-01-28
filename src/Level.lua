@@ -89,8 +89,15 @@ function Level:draw()
 
 	for x, rows in pairs(self.grid) do
 		for y, tile in pairs(rows) do
+			if require("gameconfig").waveeffect then
+				love.graphics.push()
+				love.graphics.translate(0, math.sin(x + os.clock() * 3) * 3) --cool Effect I guess, might cause nausea
+			end
 			if tile then
 				tile:draw(50)
+			end
+			if require("gameconfig").waveeffect then
+				love.graphics.pop()
 			end
 		end
 	end
@@ -107,7 +114,7 @@ local function getRooms()
 			these are hardcoded because there will only be ever three exceptions.
 			Could clean it up, but I am too lazy
 		]]
-		if filename ~= "Room.lua" and filename ~= "Start.lua" then
+		if filename ~= "Room.lua" and filename ~= "Start.lua" and filename ~= "end.lua" then
 			rooms[#rooms + 1] = require("Rooms/" .. filename:match("(.+)%.[^%.]+$"))
 		end
 	end
@@ -127,7 +134,7 @@ function Level:generate(roomcount)
 
 	local watch = os.clock()
 	local tries = 0
-	while #generatedrooms < roomcount do
+	while #generatedrooms <= roomcount do
 		if #generatedrooms >= 1 then
 			print("Enough attempts failed reverting to last room")
 			local room = generatedrooms[#generatedrooms]
@@ -141,8 +148,13 @@ function Level:generate(roomcount)
 			generatedrooms[1] = room
 			x, y, r = room:getCursor()
 		end
-		while tries < 5 and #generatedrooms < roomcount do
-			local room = roomstemplates[math.random(#roomstemplates)](self)
+		while tries < 5 and #generatedrooms <= roomcount do
+			local room
+			if #generatedrooms == roomcount then
+				room = require("Rooms/End")(self)
+			else
+				room = roomstemplates[math.random(#roomstemplates)](self)
+			end
 			room:setOrigin(x, y, r)
 
 			local success, res = xpcall(room.generate, debug.traceback, room, 10) -- the "10" is a magic number and its existence must be respected

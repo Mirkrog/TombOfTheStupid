@@ -13,7 +13,7 @@ function Player:new(level)
 	self.alive = true
 	self.canmove = true
 
-	self.speed = 30
+	self.speed = 50
 
 	self.level = level
 end
@@ -55,7 +55,7 @@ local function ceilindir(n, dir)
 end
 
 function Player:update(dt)
-	if self.canmove and self.dx == 0 and self.dy == 0 then
+	if self.canmove and (self.dx == 0 and self.dy == 0 or not require("gameconfig").enforcemovementrestrictions) then
 		if love.keyboard.isDown("s") then
 			self.dy = 1
 			self.dx = 0
@@ -99,7 +99,7 @@ function Player:update(dt)
 
 		local tile = self.level:get(ceilindir(nextx, direction), ceilindir(nexty, direction))
 
-		if tile and tile.collision == true then
+		if not require("gameconfig").nocollision and tile and tile.collision == true then
 			self.x = tile.x - (mx ~= 0 and (mx / math.abs(mx)) or 0)
 			self.y = tile.y - (my ~= 0 and (my / math.abs(my)) or 0)
 
