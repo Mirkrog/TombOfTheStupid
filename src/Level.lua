@@ -2,6 +2,8 @@ local Object = require("classic/classic")
 local Player = require("Player")
 local Camera = require("Util/Camera")
 
+local gameconfig = require("gameconfig")
+
 ---@class Level : Object
 local Level = Object:extend()
 
@@ -26,20 +28,24 @@ function Level:clear()
 end
 
 function Level:get(x, y)
-	assert(math.floor(x) == x, "x can't be a float it must be an int")
-	assert(math.floor(y) == y, "y can't be a float it must be an int")
 	if self.grid[x] == nil then
 		return
 	end
 	return self.grid[x][y]
 end
 
+local tilecache = {}
 function Level:set(x, y, r, tileName)
-	assert(math.floor(x) == x, "x can't be a float it must be an int")
-	assert(math.floor(y) == y, "y can't be a float it must be an int")
-	assert(math.floor(r) == r, "r can't be a float it must be an int")
-
-	Tile = require("Tiles/" .. tileName)
+	local Tile
+	if tilecache[tileName] then
+		Tile = tilecache[tileName]
+	else
+		Tile = require("Tiles/" .. tileName)
+		if not Tile then
+			error("Tile: \"" .. tileName .. "\" was not found")
+		end
+		tilecache[tileName] = Tile
+	end
 
 	if self.grid[x] == nil then
 		self.grid[x] = {}
@@ -58,21 +64,12 @@ function Level:touchTile(player, x, y)
 	if tile then
 		tile:onTouch(player)
 
-		tile = self:get(x + 1, y)
-		if tile ~= nil then
-			tile:onTouch(player, tile)
-		end
-		tile = self:get(x, y - 1)
-		if tile ~= nil then
-			tile:onTouch(player, tile)
-		end
-		tile = self:get(x - 1, y)
-		if tile ~= nil then
-			tile:onTouch(player, tile)
-		end
-		tile = self:get(x, y + 1)
-		if tile ~= nil then
-			tile:onTouch(player, tile)
+		local neighbors = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}}
+		for _, neighbor in ipairs(neighbors) do
+			local neighbortile = self:get(x + neighbor[1], y + neighbor[2])
+			if neighbortile ~= nil then
+				neighbortile:onTouch(player, tile)
+			end
 		end
 	end
 end
@@ -82,21 +79,26 @@ function Level:remove(x, y)
 		return
 	end
 	self.grid[x][y] = nil
+	if next(self.grid[x]) == nil then
+		self.grid[x] = nil
+	end
 end
 
 function Level:draw()
+	local clock = os.clock()
+
 	self.camera:apply(50)
 
 	for x, rows in pairs(self.grid) do
 		for y, tile in pairs(rows) do
-			if require("gameconfig").waveeffect then
+			if gameconfig.waveeffect then
 				love.graphics.push()
-				love.graphics.translate(0, math.sin(x + os.clock() * 3) * 3) --cool Effect I guess, might cause nausea
+				love.graphics.translate(0, math.sin(x + clock * 3) * 3) --cool Effect I guess, might cause nausea
 			end
 			if tile then
 				tile:draw(50)
 			end
-			if require("gameconfig").waveeffect then
+			if gameconfig.waveeffect then
 				love.graphics.pop()
 			end
 		end
@@ -123,8 +125,10 @@ local function getRooms()
 end
 
 function Level:generate(roomcount)
-	math.randomseed(os.clock())
+	local startroom = require("Rooms/Start")
+	local endroom = require("Rooms/End")
 
+	math.randomseed(os.time() * math.random(1, 100))
 	self:clear() -- clearing the level, else fun stuff happens :)
 
 	local roomstemplates = getRooms()
@@ -143,7 +147,7 @@ function Level:generate(roomcount)
 			generatedrooms[#generatedrooms] = nil
 			tries = 0
 		else
-			local room = require("Rooms/Start")(self)
+			local room = startroom(self)
 			room:generate(3)
 			generatedrooms[1] = room
 			x, y, r = room:getCursor()
@@ -151,7 +155,7 @@ function Level:generate(roomcount)
 		while tries < 5 and #generatedrooms <= roomcount do
 			local room
 			if #generatedrooms == roomcount then
-				room = require("Rooms/End")(self)
+				room = endroom(self)
 			else
 				room = roomstemplates[math.random(#roomstemplates)](self)
 			end

@@ -1,5 +1,7 @@
 local Object = require("classic/classic")
 
+local gameconfig = require("gameconfig")
+
 --[[
 	Utility to make generation of Rooms easier
 	by having a object you can apply operations to.
@@ -162,7 +164,7 @@ function Room:trySetTile(x, y, r, tileName)
 				return
 			end
 		else
-			if not _G.tossdebug.allowroomoverlap then
+			if not gameconfig.canroomsoverlap then
 				error("RoomOverlaps")
 			end
 		end

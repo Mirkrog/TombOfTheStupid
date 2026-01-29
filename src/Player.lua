@@ -1,5 +1,7 @@
 local Object = require("classic/classic")
 
+local gameconfig = require("gameconfig")
+
 ---@class Player : Object
 local Player = Object:extend()
 
@@ -99,7 +101,7 @@ function Player:update(dt)
 
 		local tile = self.level:get(ceilindir(nextx, direction), ceilindir(nexty, direction))
 
-		if not require("gameconfig").nocollision and tile and tile.collision == true then
+		if not gameconfig.nocollision and tile and tile.collision == true then
 			self.x = tile.x - (mx ~= 0 and (mx / math.abs(mx)) or 0)
 			self.y = tile.y - (my ~= 0 and (my / math.abs(my)) or 0)
 
