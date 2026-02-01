@@ -119,7 +119,7 @@ function Player:update(dt)
 end
 
 function Player:draw(scale)
-	love.graphics.setColor( 255 / 255,201 / 255,51 / 255)
+	love.graphics.setColor(coloratlas.yellow)
 
 	love.graphics.circle("fill", self.x * scale, self.y * scale, scale / 2, scale / 2)
 end

@@ -1,9 +1,11 @@
 local Tile = require("Tiles/Tile")
 
+local coloratlas = require("coloratlas")
+
 --[[
 	Kills the Player
 ]]
----@class Spike : Tile
+---@class SpikeTile : Tile
 local Spike = Tile:extend()
 
 function Spike:new(x, y, r)
@@ -18,7 +20,7 @@ function Spike:__tostring()
 end
 
 function Spike:draw(scale)
-	love.graphics.setColor( 0, 1, 1)
+	love.graphics.setColor(coloratlas.cyan)
 
 	love.graphics.rectangle("fill", self.x * scale - 0.5 * scale, self.y * scale - 0.5 * scale, scale, scale)
 end

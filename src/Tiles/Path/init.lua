@@ -1,6 +1,6 @@
 local Tile = require("Tiles/Tile")
 
----@class Path : Tile
+---@class PathTile : Tile
 local Path = Tile:extend()
 
 function Path:__tostring()
