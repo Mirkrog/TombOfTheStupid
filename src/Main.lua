@@ -1,8 +1,10 @@
 local Level = require("Level")
 
+local gameconfig = require("gameconfig")
+
 function love.load()
 	level = Level()
-	level:generate(20)
+	level:startGenTask(gameconfig.levellenght)
 end
 
 function love.update(dt)

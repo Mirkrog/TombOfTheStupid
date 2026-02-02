@@ -1,4 +1,4 @@
-local Room = require("Rooms/Room")
+ local Room = require("Rooms/Room")
 
 --[[
 	just a turn
@@ -11,7 +11,7 @@ function SpikedTurn:generate(length)
 	local hasturned = false
 	for i = 1, length + 1 do
 		if not hasturned and i > math.floor(length / 2) then
-			if math.random(0, 1) == 0 then
+			if math.random(0, 1) == 0 then --decides if the turn goes left or right
 				self:cursorPlaceTileFrontLeft("Wall")
 				self:turnCursorRight()
 			else
@@ -20,9 +20,6 @@ function SpikedTurn:generate(length)
 			end
 			self:moveCursorBackwards(2)
 			self:cursorPlaceTile("Spike", self:getCursorRot())
-			self:cursorPlaceTileBack("Wall")
-			self:cursorPlaceTileBackLeft("Wall")
-			self:cursorPlaceTileBackRight("Wall")
 			self:cursorPlaceTileLeft("Wall")
 			self:cursorPlaceTileRight("Wall")
 			self:moveCursorForward()

@@ -1,5 +1,6 @@
 local Object = require("classic/classic")
 
+local coloratlas = require("coloratlas")
 local gameconfig = require("gameconfig")
 
 ---@class Player : Object
@@ -12,10 +13,12 @@ function Player:new(level)
 	self.dy = 0
 	self.direction = 0
 
+	self.score = 0
+
 	self.alive = true
 	self.canmove = true
 
-	self.speed = 50
+	self.speed = 40
 
 	self.level = level
 end
@@ -28,6 +31,13 @@ function Player:kill()
 	self.alive = false
 	self:reset()
 	self.alive = true
+end
+
+function Player:completeLevel()
+	self.canmove = false
+	self.level:startGenTask(gameconfig.levellenght)
+	self.score = self.score + gameconfig.scoreforlevelcomplete
+	self:reset()
 end
 
 function Player:move(dx, dy)
@@ -44,6 +54,7 @@ function Player:reset()
 	self:stop()
 	self.x = 0
 	self.y = 0
+	self.canmove = true
 end
 
 local function ceilindir(n, dir)

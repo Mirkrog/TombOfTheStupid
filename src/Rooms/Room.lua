@@ -35,6 +35,7 @@ function Room:revertTiles()
 	for i, tile in pairs(self.tiles) do
 		self.level:remove(tile.x, tile.y)
 	end
+	self.tiles = {}
 end
 
 function Room:setOrigin(x, y, r)
@@ -200,25 +201,29 @@ function Room:cursorPlaceTileBackLeft(tileName, r)
 	self:trySetTile(trans1x + self:getCursorLookVectorY(), trans1y - self:getCursorLookVectorX(), r, tileName)
 end
 
-function Room:cursorPlaceTileBackRight(tileName, r)
+function Room:cursorPlaceTileBackRight(tileName, r, distance)
+	distance = distance or 1
 	r = r or 0
 	local trans1x, trans1y = self.cursor.x - self:getCursorLookVectorX(), self.cursor.y - self:getCursorLookVectorY()
-	self:trySetTile(trans1x - self:getCursorLookVectorY(), trans1y + self:getCursorLookVectorX(), r, tileName)
+	self:trySetTile(trans1x - self:getCursorLookVectorY() * distance, trans1y + self:getCursorLookVectorX() * distance, r, tileName)
 end
 
-function Room:cursorPlaceTileBack(tileName, r)
+function Room:cursorPlaceTileBack(tileName, r, distance)
+	distance = distance or 1
 	r = r or 0
-	self:trySetTile(self.cursor.x - self:getCursorLookVectorX(), self.cursor.y - self:getCursorLookVectorY(), r, tileName)
+	self:trySetTile(self.cursor.x - self:getCursorLookVectorX() * distance, self.cursor.y - self:getCursorLookVectorY() * distance, r, tileName)
 end
 
-function Room:cursorPlaceTileRight(tileName, r)
+function Room:cursorPlaceTileRight(tileName, r, distance)
+	distance = distance or 1
 	r = r or 0
-	self:trySetTile(self.cursor.x + self:getCursorLookVectorY(), self.cursor.y + self:getCursorLookVectorX(), r, tileName)
+	self:trySetTile(self.cursor.x + self:getCursorLookVectorY() * distance, self.cursor.y + self:getCursorLookVectorX() * distance, r, tileName)
 end
 
-function Room:cursorPlaceTileLeft(tileName, r)
+function Room:cursorPlaceTileLeft(tileName, r, distance)
+	distance = distance or 1
 	r = r or 0
-	self:trySetTile(self.cursor.x - self:getCursorLookVectorY(), self.cursor.y - self:getCursorLookVectorX(), r, tileName)
+	self:trySetTile(self.cursor.x - self:getCursorLookVectorY() * distance, self.cursor.y - self:getCursorLookVectorX() * distance, r, tileName)
 end
 
 return Room

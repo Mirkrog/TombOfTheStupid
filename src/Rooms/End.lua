@@ -10,10 +10,16 @@ function End:generate(length)
 	for i = 1, 2 do
 		self:cursorPlaceTileLeft("wall")
 		self:cursorPlaceTileRight("wall")
-		self:cursorPlaceTile("Path")
+		if i == 1 then
+			self:cursorPlaceTile("Path")
+		else
+			self:cursorPlaceTile("End")
+		end
 		self:cursorPlaceTileFront("wall")
 		self:moveCursorForward()
 	end
+	self:cursorPlaceTileLeft("Wall")
+	self:cursorPlaceTileRight("wall")
 end
 
 function End:__tostring()

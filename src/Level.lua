@@ -12,6 +12,8 @@ function Level:new()
 	self.player = Player(self)
 	self.camera = Camera(0.1)
 	self.camera:setTarget(self.player)
+
+	self.gencoroutine = nil
 end
 
 function Level:__tostring()
@@ -19,8 +21,15 @@ function Level:__tostring()
 end
 
 function Level:update(dt)
-	self.player:update(dt)
-	self.camera:update(dt)
+	if self.gencoroutine and coroutine.status(self.gencoroutine) ~= "dead" then
+		coroutine.resume(self.gencoroutine)
+	else
+		if self.gencoroutine then
+			self.gencoroutine = nil
+		end
+		self.player:update(dt)
+		self.camera:update(dt)
+	end
 end
 
 function Level:clear()
@@ -85,6 +94,9 @@ function Level:remove(x, y)
 end
 
 function Level:draw()
+	if self.gencoroutine and coroutine.status(self.gencoroutine) ~= "dead" and not gameconfig.liveroomgenview then
+		return
+	end
 	local clock = os.clock()
 
 	self.camera:apply(50)
@@ -124,59 +136,116 @@ local function getRooms()
 	return rooms
 end
 
-function Level:generate(roomcount)
+--[[
+	Starts a coroutine to run the level generation on
+	so the main thread doesn't get blocked
+]]
+function Level:startGenTask(levellenght)
+	self.gencoroutine = coroutine.create(function()
+		self:generate(levellenght)
+	end)
+end
+
+--[[
+	generates the level from level generation templates found in Rooms
+]]
+function Level:generate(targetcount)
 	local startroom = require("Rooms/Start")
 	local endroom = require("Rooms/End")
 
-	math.randomseed(os.time() * math.random(1, 100))
-	self:clear() -- clearing the level, else fun stuff happens :)
+	math.randomseed(os.time() * math.random(1, 100)) --making roomgen more random
+	self:clear() --clearing the level, else fun stuff happens :)
 
 	local roomstemplates = getRooms()
 
 	local generatedrooms = {}
 	local x, y, r = 0, 0, math.random(0, 3)
 
-	local watch = os.clock()
-	local tries = 0
-	while #generatedrooms <= roomcount do
+	local watch
+	if gameconfig.verboseroomgen then
+		watch = os.clock() --only used for debugging
+	end
+
+	local lastyield = os.clock() --tracks last time coroutine yielded
+
+	local tries = 0 --tracks how many room gen attempts where tried in a row
+	local failedroomplacements = 0 --tracks how many rooms failed to generate
+
+	local lastroom --contains the last selected room even when generation failed
+	local room
+
+	while #generatedrooms <= targetcount do
 		if #generatedrooms >= 1 then
-			print("Enough attempts failed reverting to last room")
-			local room = generatedrooms[#generatedrooms]
-			room:revertTiles()
-			x, y, r = room:getOrigin()
-			generatedrooms[#generatedrooms] = nil
-			tries = 0
-		else
-			local room = startroom(self)
+			if failedroomplacements > targetcount * gameconfig.maxfailedplacementsperroom then --triggers when rooms fail too often to generate
+				if gameconfig.verboseroomgen then
+					print("Too much attempts failed restarting generation")
+				end
+				self:clear()
+				generatedrooms = {}
+				x, y, r = 0, 0, math.random(0, 3)
+				tries = 0
+			else
+				if gameconfig.verboseroomgen then
+					print("Enough attempts failed reverting to last room")
+				end
+				local room = generatedrooms[#generatedrooms]
+				room:revertTiles()
+				x, y, r = room:getOrigin()
+				generatedrooms[#generatedrooms] = nil
+				tries = 0
+			end
+		end
+		if #generatedrooms <= 0 then
+			room = startroom(self)
+			room:setOrigin(x, y, r)
 			room:generate(3)
 			generatedrooms[1] = room
 			x, y, r = room:getCursor()
 		end
-		while tries < 5 and #generatedrooms <= roomcount do
-			local room
-			if #generatedrooms == roomcount then
+		while tries < 5 and #generatedrooms <= targetcount do
+			if #generatedrooms == targetcount then
 				room = endroom(self)
 			else
-				room = roomstemplates[math.random(#roomstemplates)](self)
+				while room == lastroom or room == generatedrooms[#generatedrooms] do
+					room = roomstemplates[math.random(#roomstemplates)](self)
+				end
+				lastroom = room
 			end
 			room:setOrigin(x, y, r)
 
-			local success, res = xpcall(room.generate, debug.traceback, room, 10) -- the "10" is a magic number and its existence must be respected
+			local success, res = xpcall(room.generate, debug.traceback, room, 
+										math.random(gameconfig.minroomlength, gameconfig.maxroomlength))
 			if not success then
 				if not string.find(res, "RoomOverlaps", 1, true) then
 					error(res)
 				end
-				print("Room failed to generate: " .. room:__tostring() .. " at: " .. x .. ", " .. y .. ", " .. r)
+				if gameconfig.verboseroomgen then
+					print("Room failed to generate: " 
+						  .. room:__tostring() 
+						  .. " at: " .. x .. ", " .. y .. ", " .. r 
+						  .. " Current length: " .. #generatedrooms)
+				end
 				room:revertTiles()
 				tries = tries + 1
+				failedroomplacements = failedroomplacements + 1
 			else
 				tries = 0
 				generatedrooms[#generatedrooms + 1] = room
 				x, y, r = room:getCursor()
+
+				if gameconfig.liveroomgenview then
+					self.camera:setPos(x, y)
+				end
+			end
+			if gameconfig.liveroomgenview or os.clock() - lastyield > gameconfig.roomgenyield then
+				coroutine.yield()
+				lastyield = os.clock()
 			end
 		end
 	end
-	print("Generation finished successfully in: " .. os.clock() - watch .. "s")
+	if gameconfig.verboseroomgen then
+		print("Generation finished successfully in: " .. os.clock() - watch .. "s")
+	end
 end
 
 return Level
