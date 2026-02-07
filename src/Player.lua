@@ -57,6 +57,10 @@ function Player:reset()
 	self.canmove = true
 end
 
+function Player:getScore()
+	return self.score
+end
+
 local function ceilindir(n, dir)
 	if dir == 1 then
 		return math.ceil(n)

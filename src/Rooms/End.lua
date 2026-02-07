@@ -16,7 +16,7 @@ function End:generate(length)
 			self:cursorPlaceTile("End")
 		end
 		self:cursorPlaceTileFront("wall")
-		self:moveCursorForward()
+		self:cursorMoveForward()
 	end
 	self:cursorPlaceTileLeft("Wall")
 	self:cursorPlaceTileRight("wall")

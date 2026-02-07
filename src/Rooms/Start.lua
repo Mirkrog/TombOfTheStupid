@@ -14,7 +14,7 @@ function Start:generate(length)
 		self:cursorPlaceTileLeft("wall")
 		self:cursorPlaceTileRight("wall")
 		self:cursorPlaceTile("Path")
-		self:moveCursorForward()
+		self:cursorMoveForward()
 	end
 end
 

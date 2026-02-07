@@ -7,8 +7,8 @@ Room = require("Rooms/Room")
 Loop = Room:extend()
 
 function Loop:generate(length)
-	length = length > 7 and length or 7
-    length = math.floor((length - 2) / 4) * 4 + 2
+	length = length > 7 and length or 7 --smaller than 7 doesn't work
+    length = math.floor((length - 2) / 4) * 4 + 2 --conmverted so lenght / 4 always is an int
 
     local looplength = math.floor((length - 2) / 4) * 4
 	local sidelength = looplength / 4
@@ -17,16 +17,16 @@ function Loop:generate(length)
 	self:cursorPlaceTileLeft("wall")
 	self:cursorPlaceTileRight("wall")
 	self:cursorPlaceTile("Path")
-	self:moveCursorForward()
+	self:cursorMoveForward()
 
 	for i = 1, length do
 		if i > 1 and (i - 1) % sidelength == 0 and i < looplength then
 			if turndirection == 1 then
 				self:cursorPlaceTileFrontLeft("wall")
-				self:turnCursorRight()
+				self:cursorTurnRight()
 			else
 				self:cursorPlaceTileFrontRight("wall")
-				self:turnCursorLeft()
+				self:cursorTurnLeft()
 			end
 			self:cursorPlaceTileBack("wall")
 		end
@@ -34,7 +34,7 @@ function Loop:generate(length)
 		self:cursorPlaceTileLeft("wall")
 		self:cursorPlaceTileRight("wall")
 		self:cursorPlaceTile("Path")
-		self:moveCursorForward()
+		selfcursorMoveForward()
 	end
 end
 

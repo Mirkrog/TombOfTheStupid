@@ -7,28 +7,29 @@
 local SpikedTurn = Room:extend()
 
 function SpikedTurn:generate(length)
-	length = length > 3 and length or 3
-	local hasturned = false
+	length = length > 3 and length or 3 --shorter than 3 is impossible
+	local hasturned = false --prevents more than one turn
+
 	for i = 1, length + 1 do
 		if not hasturned and i > math.floor(length / 2) then
 			if math.random(0, 1) == 0 then --decides if the turn goes left or right
 				self:cursorPlaceTileFrontLeft("Wall")
-				self:turnCursorRight()
+				self:cursorTurnRight()
 			else
 				self:cursorPlaceTileFrontRight("Wall")
-				self:turnCursorLeft()
+				self:cursorTurnLeft()
 			end
-			self:moveCursorBackwards(2)
+			self:cursorMoveBackwards(2) --we move back 2 to place a spike there
 			self:cursorPlaceTile("Spike", self:getCursorRot())
 			self:cursorPlaceTileLeft("Wall")
 			self:cursorPlaceTileRight("Wall")
-			self:moveCursorForward()
-			hasturned = true
+			self:cursorMoveForward()
+			hasturned = true --preventing another turn
 		end
 		self:cursorPlaceTileLeft("Wall")
 		self:cursorPlaceTileRight("Wall")
 		self:cursorPlaceTile("Path")
-		self:moveCursorForward()
+		self:cursorMoveForward()
 	end
 end
 

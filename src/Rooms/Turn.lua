@@ -7,24 +7,25 @@ local Room = require("Rooms/Room")
 local Turn = Room:extend()
 
 function Turn:generate(length)
-	length = length > 3 and length or 3
-	local hasturned = false
+	length = length > 3 and length or 3 --shorter than 3 not allowed
+	local hasturned = false --did we turned already?
+
 	for i = 1, length do
 		if not hasturned and i > math.floor(length / 2) then
 			if math.random(0, 1) == 0 then
 				self:cursorPlaceTileFrontLeft("Wall")
-				self:turnCursorRight()
+				self:cursorTurnRight()
 			else
 				self:cursorPlaceTileFrontRight("Wall")
-				self:turnCursorLeft()
+				self:cursorTurnLeft()
 			end
 			self:cursorPlaceTileBack("Wall")
-			hasturned = true
+			hasturned = true --prevents another turn
 		end
 		self:cursorPlaceTileLeft("Wall")
 		self:cursorPlaceTileRight("Wall")
 		self:cursorPlaceTile("Path")
-		self:moveCursorForward()
+		self:cursorMoveForward()
 	end
 end
 

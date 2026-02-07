@@ -54,16 +54,16 @@ function Room:getOrigin(x, y, r)
 	
 end
 
-function Room:setCursorPos(x, y)
+function Room:cursorSetPos(x, y)
 	self.cursor.x = x
 	self.cursor.y = y
 end
 
-function Room:setCursorRot(r)
+function Room:cursorSetRot(r)
 	self.cursor.r = r
 end
 
-function Room:setCursorToOrigin()
+function Room:cursorSetToOrigin()
 	self.cursor.x = self.origin.x
 	self.cursor.y = self.origin.y 
 	self.cursor.r = self.origin.r
@@ -79,74 +79,74 @@ local function round(n)
 	end
 end
 
-function Room:getCursorLookVectorX()
+function Room:cursorGetLookVectorX()
 	return round(math.sin((math.pi * 2) * (self.cursor.r / 4)))
 end
 
-function Room:getCursorLookVectorY()
+function Room:cursorGetLookVectorY()
 	return -round(math.cos((math.pi * 2) * (self.cursor.r / 4)))
 end
 
-function Room:getCursorLookVector()
+function Room:cursorGetLookVector()
 	return self:getCursorLookVectorX(),
 			self:getCursorLookVectorY()
 end
 
-function Room:getCursorPos()
+function Room:cursorGetPos()
 	return self.cursor.x, self.cursor.y
 end
 
-function Room:getCursorPosX()
+function Room:cursorGetPosX()
 	return self.cursor.x
 end
 
-function Room:getCursorPosY()
+function Room:cursorGetPosY()
 	return self.cursor.y
 end
 
-function Room:getCursorRot()
+function Room:cursorGetRot()
 	return self.cursor.r
 end
 
-function Room:getCursor()
+function Room:cursorGetData()
 	return self.cursor.x, self.cursor.y, self.cursor.r
 end
 
-function Room:moveCursorForward(amount)
+function Room:cursorMoveForward(amount)
 	amount = amount or 1
 	self.cursor.x = self.cursor.x + self:getCursorLookVectorX() * amount
 	self.cursor.y = self.cursor.y + self:getCursorLookVectorY() * amount
 end
 
-function Room:moveCursorBackwards(amount)
+function Room:cursorMoveBackwards(amount)
 	amount = amount or 1
 	self.cursor.x = self.cursor.x - self:getCursorLookVectorX() * amount
 	self.cursor.y = self.cursor.y - self:getCursorLookVectorY() * amount
 end
 
-function Room:moveCursorLeft(amount)
+function Room:cursorMoveLeft(amount)
 	amount = amount or 1
 	self.cursor.x = self.cursor.x - self:getCursorLookVectorY() * amount
 	self.cursor.y = self.cursor.y - self:getCursorLookVectorX() * amount
 end
 
-function Room:moveCursorRight(amount)
+function Room:cursorMoveRight(amount)
 	amount = amount or 1
 	self.cursor.x = self.cursor.x + self:getCursorLookVectorY() * amount
 	self.cursor.y = self.cursor.y + self:getCursorLookVectorX() * amount
 end
 
-function Room:turnCursorRight(amount)
+function Room:cursorTurnRight(amount)
 	amount = amount or 1
 	self.cursor.r = (self.cursor.r + amount) % 4
 end
 
-function Room:turnCursorLeft(amount)
+function Room:cursorTurnLeft(amount)
 	amount = amount or 1
 	self.cursor.r = (self.cursor.r - amount) % 4
 end
 
--- I actually stole this from somewhere I don't remember
+--actually stole this from somewhere, hope they don't mind
 local function tableContains(table, element)
 	for i, value in pairs(table) do
     	if value == element then
@@ -156,7 +156,7 @@ local function tableContains(table, element)
 	return false
 end
 
--- Inheriting Rooms can technically change this, but it is kinda risky
+-- Inheriting Rooms can technically change this, but it is kinda risky and not recommended
 function Room:trySetTile(x, y, r, tileName)
 	r = r or 0
 	if self.level:get(x, y) ~= nil then

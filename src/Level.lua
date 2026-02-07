@@ -108,7 +108,7 @@ function Level:draw()
 				love.graphics.translate(0, math.sin(x + clock * 3) * 3) --cool Effect I guess, might cause nausea
 			end
 			if tile then
-				tile:draw(50)
+				tile:draw(gameconfig.drawscale)
 			end
 			if gameconfig.waveeffect then
 				love.graphics.pop()
@@ -116,9 +116,11 @@ function Level:draw()
 		end
 	end
 
-	self.player:draw(50)
+	self.player:draw(gameconfig.drawscale) --renders the player
 
 	self.camera:unapply()
+
+	love.graphics.printf(self.player:getScore() + 100000, 0, 100, love.graphics.getWidth(), "center", 0)
 end
 
 local function getRooms()
@@ -200,7 +202,7 @@ function Level:generate(targetcount)
 			room:setOrigin(x, y, r)
 			room:generate(3)
 			generatedrooms[1] = room
-			x, y, r = room:getCursor()
+			x, y, r = room:cursorGetData()
 		end
 		while tries < 5 and #generatedrooms <= targetcount do
 			if #generatedrooms == targetcount then
@@ -231,7 +233,7 @@ function Level:generate(targetcount)
 			else
 				tries = 0
 				generatedrooms[#generatedrooms + 1] = room
-				x, y, r = room:getCursor()
+				x, y, r = room:cursorGetData()
 
 				if gameconfig.liveroomgenview then
 					self.camera:setPos(x, y)
