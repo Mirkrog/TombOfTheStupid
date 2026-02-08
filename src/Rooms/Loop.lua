@@ -34,7 +34,7 @@ function Loop:generate(length)
 		self:cursorPlaceTileLeft("wall")
 		self:cursorPlaceTileRight("wall")
 		self:cursorPlaceTile("Path")
-		selfcursorMoveForward()
+		self:cursorMoveForward()
 	end
 end
 

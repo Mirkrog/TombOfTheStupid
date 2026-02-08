@@ -22,7 +22,10 @@ end
 
 function Level:update(dt)
 	if self.gencoroutine and coroutine.status(self.gencoroutine) ~= "dead" then
-		coroutine.resume(self.gencoroutine)
+		success, err =  coroutine.resume(self.gencoroutine)
+		if not success then
+			error(err)
+		end
 	else
 		if self.gencoroutine then
 			self.gencoroutine = nil
@@ -186,6 +189,7 @@ function Level:generate(targetcount)
 				generatedrooms = {}
 				x, y, r = 0, 0, math.random(0, 3)
 				tries = 0
+				failedroomplacements = 0
 			else
 				if gameconfig.verboseroomgen then
 					print("Enough attempts failed reverting to last room")

@@ -20,7 +20,7 @@ function SpikedTurn:generate(length)
 				self:cursorTurnLeft()
 			end
 			self:cursorMoveBackwards(2) --we move back 2 to place a spike there
-			self:cursorPlaceTile("Spike", self:getCursorRot())
+			self:cursorPlaceTile("Spike", self:cursorGetRot())
 			self:cursorPlaceTileLeft("Wall")
 			self:cursorPlaceTileRight("Wall")
 			self:cursorMoveForward()

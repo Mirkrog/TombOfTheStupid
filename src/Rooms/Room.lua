@@ -88,8 +88,8 @@ function Room:cursorGetLookVectorY()
 end
 
 function Room:cursorGetLookVector()
-	return self:getCursorLookVectorX(),
-			self:getCursorLookVectorY()
+	return self:cursorGetLookVectorX(),
+			self:cursorGetLookVectorY()
 end
 
 function Room:cursorGetPos()
@@ -114,26 +114,26 @@ end
 
 function Room:cursorMoveForward(amount)
 	amount = amount or 1
-	self.cursor.x = self.cursor.x + self:getCursorLookVectorX() * amount
-	self.cursor.y = self.cursor.y + self:getCursorLookVectorY() * amount
+	self.cursor.x = self.cursor.x + self:cursorGetLookVectorX() * amount
+	self.cursor.y = self.cursor.y + self:cursorGetLookVectorY() * amount
 end
 
 function Room:cursorMoveBackwards(amount)
 	amount = amount or 1
-	self.cursor.x = self.cursor.x - self:getCursorLookVectorX() * amount
-	self.cursor.y = self.cursor.y - self:getCursorLookVectorY() * amount
+	self.cursor.x = self.cursor.x - self:cursorGetLookVectorX() * amount
+	self.cursor.y = self.cursor.y - self:cursorGetLookVectorY() * amount
 end
 
 function Room:cursorMoveLeft(amount)
 	amount = amount or 1
-	self.cursor.x = self.cursor.x - self:getCursorLookVectorY() * amount
-	self.cursor.y = self.cursor.y - self:getCursorLookVectorX() * amount
+	self.cursor.x = self.cursor.x - self:cursorGetLookVectorY() * amount
+	self.cursor.y = self.cursor.y - self:cursorGetLookVectorX() * amount
 end
 
 function Room:cursorMoveRight(amount)
 	amount = amount or 1
-	self.cursor.x = self.cursor.x + self:getCursorLookVectorY() * amount
-	self.cursor.y = self.cursor.y + self:getCursorLookVectorX() * amount
+	self.cursor.x = self.cursor.x + self:cursorGetLookVectorY() * amount
+	self.cursor.y = self.cursor.y + self:cursorGetLookVectorX() * amount
 end
 
 function Room:cursorTurnRight(amount)
@@ -180,50 +180,50 @@ end
 
 function Room:cursorPlaceTileFront(tileName, r)
 	r = r or 0
-	self:trySetTile(self.cursor.x + self:getCursorLookVectorX(), self.cursor.y + self:getCursorLookVectorY(), r, tileName)
+	self:trySetTile(self.cursor.x + self:cursorGetLookVectorX(), self.cursor.y + self:cursorGetLookVectorY(), r, tileName)
 end
 
 function Room:cursorPlaceTileFrontLeft(tileName, r)
 	r = r or 0
-	local trans1x, trans1y = self.cursor.x + self:getCursorLookVectorX(), self.cursor.y + self:getCursorLookVectorY()
-	self:trySetTile(trans1x + self:getCursorLookVectorY(), trans1y - self:getCursorLookVectorX(), r, tileName)
+	local trans1x, trans1y = self.cursor.x + self:cursorGetLookVectorX(), self.cursor.y + self:cursorGetLookVectorY()
+	self:trySetTile(trans1x + self:cursorGetLookVectorY(), trans1y - self:cursorGetLookVectorX(), r, tileName)
 end
 
 function Room:cursorPlaceTileFrontRight(tileName, r)
 	r = r or 0
-	local trans1x, trans1y = self.cursor.x + self:getCursorLookVectorX(), self.cursor.y + self:getCursorLookVectorY()
-	self:trySetTile(trans1x - self:getCursorLookVectorY(), trans1y + self:getCursorLookVectorX(), r, tileName)
+	local trans1x, trans1y = self.cursor.x + self:cursorGetLookVectorX(), self.cursor.y + self:cursorGetLookVectorY()
+	self:trySetTile(trans1x - self:cursorGetLookVectorY(), trans1y + self:cursorGetLookVectorX(), r, tileName)
 end
 
 function Room:cursorPlaceTileBackLeft(tileName, r)
 	r = r or 0
-	local trans1x, trans1y = self.cursor.x - self:getCursorLookVectorX(), self.cursor.y - self:getCursorLookVectorY()
-	self:trySetTile(trans1x + self:getCursorLookVectorY(), trans1y - self:getCursorLookVectorX(), r, tileName)
+	local trans1x, trans1y = self.cursor.x - self:cursorGetLookVectorX(), self.cursor.y - self:cursorGetLookVectorY()
+	self:trySetTile(trans1x + self:cursorGetLookVectorY(), trans1y - self:cursorGetLookVectorX(), r, tileName)
 end
 
 function Room:cursorPlaceTileBackRight(tileName, r, distance)
 	distance = distance or 1
 	r = r or 0
-	local trans1x, trans1y = self.cursor.x - self:getCursorLookVectorX(), self.cursor.y - self:getCursorLookVectorY()
-	self:trySetTile(trans1x - self:getCursorLookVectorY() * distance, trans1y + self:getCursorLookVectorX() * distance, r, tileName)
+	local trans1x, trans1y = self.cursor.x - self:cursorGetLookVectorX(), self.cursor.y - self:cursorGetLookVectorY()
+	self:trySetTile(trans1x - self:cursorGetLookVectorY() * distance, trans1y + self:cursorGetLookVectorX() * distance, r, tileName)
 end
 
 function Room:cursorPlaceTileBack(tileName, r, distance)
 	distance = distance or 1
 	r = r or 0
-	self:trySetTile(self.cursor.x - self:getCursorLookVectorX() * distance, self.cursor.y - self:getCursorLookVectorY() * distance, r, tileName)
+	self:trySetTile(self.cursor.x - self:cursorGetLookVectorX() * distance, self.cursor.y - self:cursorGetLookVectorY() * distance, r, tileName)
 end
 
 function Room:cursorPlaceTileRight(tileName, r, distance)
 	distance = distance or 1
 	r = r or 0
-	self:trySetTile(self.cursor.x + self:getCursorLookVectorY() * distance, self.cursor.y + self:getCursorLookVectorX() * distance, r, tileName)
+	self:trySetTile(self.cursor.x + self:cursorGetLookVectorY() * distance, self.cursor.y + self:cursorGetLookVectorX() * distance, r, tileName)
 end
 
 function Room:cursorPlaceTileLeft(tileName, r, distance)
 	distance = distance or 1
 	r = r or 0
-	self:trySetTile(self.cursor.x - self:getCursorLookVectorY() * distance, self.cursor.y - self:getCursorLookVectorX() * distance, r, tileName)
+	self:trySetTile(self.cursor.x - self:cursorGetLookVectorY() * distance, self.cursor.y - self:cursorGetLookVectorX() * distance, r, tileName)
 end
 
 return Room
