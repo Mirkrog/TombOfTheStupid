@@ -13,6 +13,7 @@ function Spike:new(x, y, r)
 	self.y = y 
 	self.r = r 
 	self.collision = false
+	self.attributes = {}
 end
 
 function Spike:__tostring()

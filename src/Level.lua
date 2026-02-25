@@ -14,6 +14,8 @@ function Level:new()
 	self.camera:setTarget(self.player)
 
 	self.gencoroutine = nil
+	self.scorefont = love.graphics.newFont("Assets/Pixellari.ttf", 90)
+	self.scorefont:setFilter("nearest", "nearest")
 end
 
 function Level:__tostring()
@@ -112,6 +114,9 @@ function Level:draw()
 			end
 			if tile then
 				tile:draw(gameconfig.drawscale)
+				for i, attribute in ipairs(tile.attributes) do
+					attribute:draw(gameconfig.drawscale)
+				end
 			end
 			if gameconfig.waveeffect then
 				love.graphics.pop()
@@ -123,7 +128,8 @@ function Level:draw()
 
 	self.camera:unapply()
 
-	love.graphics.printf(self.player:getScore() + 100000, 0, 100, love.graphics.getWidth(), "center", 0)
+	love.graphics.printf(self.player:getScore(), self.scorefont,
+						 0, 20, love.graphics.getWidth(), "center")
 end
 
 local function getRooms()

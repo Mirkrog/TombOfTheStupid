@@ -10,6 +10,7 @@ function Wall:new(x, y, r)
 	self.y = y 
 	self.r = r 
 	self.collision = true
+	self.attributes = {}
 end
 
 function Wall:__tostring()

@@ -10,6 +10,7 @@ function End:new(x, y, r)
 	self.y = y 
 	self.r = r 
 	self.collision = false
+	self.attributes = {}
 	self.clock = 0
 end
 

@@ -28,7 +28,10 @@ function Player:__tostring()
 end
 
 function Player:kill()
+	self.canmove = false
 	self.alive = false
+	self.score = 0
+	self.level:startGenTask(gameconfig.levellenght)
 	self:reset()
 	self.alive = true
 end
