@@ -10,7 +10,7 @@ function Straight:generate(length)
 	for i = 1, length do
 		self:cursorPlaceTileLeft("wall")
 		self:cursorPlaceTileRight("wall")
-		self:cursorPlaceTile("Path")
+		self:cursorPlaceTile("Path"):addAttribute("Coin")
 		self:cursorMoveForward()
 	end
 end

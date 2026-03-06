@@ -10,10 +10,14 @@ function Start:generate(length)
 	self:cursorPlaceTileBack("wall")
 	self:cursorPlaceTileBackLeft("wall")
 	self:cursorPlaceTileBackRight("wall")
+	self:cursorPlaceTileLeft("wall")
+	self:cursorPlaceTileRight("wall")
+	self:cursorPlaceTile("Path")
+	self:cursorMoveForward()
 	for i = 1, 2 do
 		self:cursorPlaceTileLeft("wall")
 		self:cursorPlaceTileRight("wall")
-		self:cursorPlaceTile("Path")
+		self:cursorPlaceTile("Path"):addAttribute("Coin")
 		self:cursorMoveForward()
 	end
 end

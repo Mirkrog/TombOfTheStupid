@@ -16,7 +16,7 @@ function Loop:generate(length)
 
 	self:cursorPlaceTileLeft("wall")
 	self:cursorPlaceTileRight("wall")
-	self:cursorPlaceTile("Path")
+	self:cursorPlaceTile("Path"):addAttribute("Coin")
 	self:cursorMoveForward()
 
 	for i = 1, length do
@@ -33,7 +33,7 @@ function Loop:generate(length)
 
 		self:cursorPlaceTileLeft("wall")
 		self:cursorPlaceTileRight("wall")
-		self:cursorPlaceTile("Path")
+		self:cursorPlaceTile("Path"):addAttribute("Coin")
 		self:cursorMoveForward()
 	end
 end

@@ -162,7 +162,7 @@ function Room:trySetTile(x, y, r, tileName)
 	if self.level:get(x, y) ~= nil then
 		if tableContains(self.tiles, self.level:get(x, y)) then
 			if self.level:get(x, y):isExact(require("Tiles/Path")) then --hardcoded because paths are way markers and should never be overridden
-				return
+				return require("Tiles/Tile")() --returns empty placeholder tile when function fails so followup functions don't have to check for success
 			end
 		else
 			if not gameconfig.canroomsoverlap then
@@ -172,7 +172,6 @@ function Room:trySetTile(x, y, r, tileName)
 	end
 	local tile = self.level:set(x, y, r, tileName)
 	self.tiles[#self.tiles + 1] = tile
-	tile:addAttribute("Attribute")
 	return tile
 end
 

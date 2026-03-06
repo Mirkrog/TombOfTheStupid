@@ -43,6 +43,11 @@ function Player:completeLevel()
 	self:reset()
 end
 
+function Player:givePoints(count)
+	count = count or 1
+	self.score = self.score + count
+end
+
 function Player:move(dx, dy)
 	self.dx = dx
 	self.dy = dy
@@ -95,6 +100,7 @@ function Player:update(dt)
 		end
 	end
 	if self.dx == 0 and self.dy == 0 then
+		self.level:touchTile(self, self.x, self.y)
 		return
 	end
 

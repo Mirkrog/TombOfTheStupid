@@ -11,7 +11,7 @@ function End:generate(length)
 		self:cursorPlaceTileLeft("wall")
 		self:cursorPlaceTileRight("wall")
 		if i == 1 then
-			self:cursorPlaceTile("Path")
+			self:cursorPlaceTile("Path"):addAttribute("Coin")
 		else
 			self:cursorPlaceTile("End")
 		end

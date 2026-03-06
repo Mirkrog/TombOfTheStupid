@@ -48,23 +48,19 @@ function Level:get(x, y)
 	return self.grid[x][y]
 end
 
-local tilecache = {}
 function Level:set(x, y, r, tileName)
 	local Tile
-	if tilecache[tileName] then
-		Tile = tilecache[tileName]
-	else
-		Tile = require("Tiles/" .. tileName)
-		if not Tile then
-			error("Tile: \"" .. tileName .. "\" was not found")
-		end
-		tilecache[tileName] = Tile
+	--Tiles are saved in the "Tiles" Folder as a subfolder with an "init.lua"
+	Tile = require("Tiles/" .. tileName)
+	if not Tile then
+		error("Tile: \"" .. tileName .. "\" was not found")
 	end
+	
+	local tile = Tile(x, y, r)
 
 	if self.grid[x] == nil then
 		self.grid[x] = {}
 	end
-	local tile = Tile(x, y, r)
 	self.grid[x][y] = tile
 	return tile
 end
@@ -76,7 +72,7 @@ end
 function Level:touchTile(player, x, y)
 	local tile = self:get(x, y)
 	if tile then
-		tile:onTouch(player)
+		tile:triggerTouch(player)
 
 		local neighbors = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}}
 		for _, neighbor in ipairs(neighbors) do

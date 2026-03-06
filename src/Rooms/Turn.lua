@@ -24,7 +24,7 @@ function Turn:generate(length)
 		end
 		self:cursorPlaceTileLeft("Wall")
 		self:cursorPlaceTileRight("Wall")
-		self:cursorPlaceTile("Path")
+		self:cursorPlaceTile("Path"):addAttribute("Coin")
 		self:cursorMoveForward()
 	end
 end

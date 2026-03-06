@@ -24,11 +24,15 @@ function SpikedTurn:generate(length)
 			self:cursorPlaceTileLeft("Wall")
 			self:cursorPlaceTileRight("Wall")
 			self:cursorMoveForward()
+			self:cursorPlaceTileLeft("Wall")
+			self:cursorPlaceTileRight("Wall")
+			self:cursorPlaceTile("Path")
+			self:cursorMoveForward()
 			hasturned = true --preventing another turn
 		end
 		self:cursorPlaceTileLeft("Wall")
 		self:cursorPlaceTileRight("Wall")
-		self:cursorPlaceTile("Path")
+		self:cursorPlaceTile("Path"):addAttribute("Coin")
 		self:cursorMoveForward()
 	end
 end
