@@ -11,7 +11,14 @@ function Player:new(level)
 	self.y = 0
 	self.dx = 0
 	self.dy = 0
-	self.direction = 0
+
+	--[[
+		will be written to if the user inputs to early so movement feels smoother
+		0 = up; 1 = right; 2 = down; 3 = left
+	]]
+	self.bufferdirection = 0
+	self.lastbuffdirwrite = -1000 --keeps track of last write to bufferdirection with os.clock()
+	self.buffdirexpirancy = 0.05 --how early a user can be for the input to count
 
 	self.score = 0
 
@@ -79,29 +86,84 @@ local function ceilindir(n, dir)
 	end
 end
 
+function Player:moveUp()
+	self.dx = 0
+	self.dy = -1
+end
+
+function Player:moveDown()
+	self.dx = 0
+	self.dy = 1
+end
+
+function Player:moveLeft()
+	self.dx = -1
+	self.dy = 0
+end
+
+function Player:moveRight()
+	self.dx = 1
+	self.dy = 0
+end
+
+--[[
+	moves the player into the specified direction
+	0 = up; 1 = right; 2 = down; 3 = left
+]]
+function Player:moveInDirection(direction)
+	if direction == 0 then
+		self:moveUp()
+	elseif direction == 1 then
+		self:moveRight()
+	elseif direction == 2 then
+		self:moveDown()
+	elseif direction == 3 then
+		self:moveLeft()
+	else
+		error("Invalid Direction" .. direction)
+	end
+end
+
 function Player:update(dt)
-	if self.canmove and (self.dx == 0 and self.dy == 0 or not require("gameconfig").enforcemovementrestrictions) then
-		if love.keyboard.isDown("s") then
-			self.dy = 1
-			self.dx = 0
+	local canmove = self.canmove and (self.dx == 0 and self.dy == 0 or
+					not require("gameconfig").enforcemovementrestrictions) -- this will be reused so we save it to a variable
+	if canmove and os.clock() - self.lastbuffdirwrite < self.buffdirexpirancy then
+		self:moveInDirection(self.bufferdirection)
+	end	
+	if love.keyboard.isDown("s") then
+		if canmove then
+			self:moveDown()
+		else
+			self.bufferdirection = 2
+			self.lastbuffdirwrite = os.clock()
 		end
-		if love.keyboard.isDown("w") then
-			self.dy = -1
-			self.dx = 0
+	end
+	if love.keyboard.isDown("w") then
+		if canmove then
+			self:moveUp()
+		else
+			self.bufferdirection = 0
+			self.lastbuffdirwrite = os.clock()
 		end
-		if love.keyboard.isDown("d") then
-			self.dx = 1
-			self.dy = 0
-			self.y = math.floor(self.y)
+	end
+	if love.keyboard.isDown("d") then
+		if canmove then
+			self:moveRight()
+		else
+			self.bufferdirection = 1
+			self.lastbuffdirwrite = os.clock()
 		end
-		if love.keyboard.isDown("a") then
-			self.dx = -1
-			self.dy = 0
+	end
+	if love.keyboard.isDown("a") then
+		if canmove then
+			self:moveLeft()
+		else
+			self.bufferdirection = 3
+			self.lastbuffdirwrite = os.clock()
 		end
 	end
 	if self.dx == 0 and self.dy == 0 then
 		self.level:touchTile(self, self.x, self.y)
-		return
 	end
 
 	local mx = self.dx * self.speed * dt

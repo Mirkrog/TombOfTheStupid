@@ -8,16 +8,8 @@ local coloratlas = require("coloratlas")
 ---@class SpikeTile : Tile
 local Spike = Tile:extend()
 
-function Spike:new(x, y, r)
-	self.x = x 
-	self.y = y 
-	self.r = r 
-	self.collision = false
-	self.attributes = {}
-end
-
 function Spike:__tostring()
-	return "Spike"
+	return "Spike" .. " At: " .. self.x .. self.y
 end
 
 function Spike:draw(scale)

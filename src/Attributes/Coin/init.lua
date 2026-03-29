@@ -3,14 +3,12 @@ local Attribute = require("Attributes/Attribute")
 local coloratlas = require("coloratlas")
 
 --[[
-	Extends the functionality of any Tile by adding it to the Tiles Attribute list
-	If the Level was a entity component system this would be a component of a entity(Tile)
+	A simple coin for the player to collect
 ]]
 local Coin = Attribute:extend()
 
 function Coin:new(parent)
-	self.parent = parent
-	self.alive = false
+	Coin.super.new(self, parent)
 end
 
 function Coin:draw(scale)

@@ -5,22 +5,12 @@ local coloratlas = require("coloratlas")
 ---@class EndTile : Tile
 local End = Tile:extend()
 
-function End:new(x, y, r)
-	self.x = x 
-	self.y = y 
-	self.r = r 
-	self.collision = false
-	self.attributes = {}
-	self.clock = 0
-end
-
 function End:__tostring()
-	return "End"
+	return "End" .. " At: " .. self.x .. self.y
 end
 
 function End:draw(scale)
-	self.clock = self.clock + 1
-	if self.clock % 20 <= 10 then
+	if os.clock() % 20 <= 10 then
 		love.graphics.setColor(coloratlas.yellow)
 	else
 		love.graphics.setColor(coloratlas.purple)

@@ -14,7 +14,7 @@ function Wall:new(x, y, r)
 end
 
 function Wall:__tostring()
-	return "Wall"
+	return "Wall" .. " At: " .. self.x .. self.y
 end
 
 function Wall:draw(scale)

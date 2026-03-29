@@ -55,8 +55,8 @@ function Level:set(x, y, r, tileName)
 	if not Tile then
 		error("Tile: \"" .. tileName .. "\" was not found")
 	end
-	
-	local tile = Tile(x, y, r)
+
+	local tile = Tile(x, y, r, self)
 
 	if self.grid[x] == nil then
 		self.grid[x] = {}
@@ -75,10 +75,10 @@ function Level:touchTile(player, x, y)
 		tile:triggerTouch(player)
 
 		local neighbors = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}}
-		for _, neighbor in ipairs(neighbors) do
+		for i, neighbor in ipairs(neighbors) do
 			local neighbortile = self:get(x + neighbor[1], y + neighbor[2])
 			if neighbortile ~= nil then
-				neighbortile:onTouch(player, tile)
+				neighbortile:triggerTouch(player, tile)
 			end
 		end
 	end
@@ -112,7 +112,7 @@ function Level:draw()
 				tile:draw(gameconfig.drawscale)
 				for i, attribute in ipairs(tile.attributes) do
 					attribute:draw(gameconfig.drawscale)
-				end
+				end 
 			end
 			if gameconfig.waveeffect then
 				love.graphics.pop()
@@ -125,7 +125,7 @@ function Level:draw()
 	self.camera:unapply()
 
 	love.graphics.printf(self.player:getScore(), self.scorefont,
-						 0, 20, love.graphics.getWidth(), "center")
+						 0, 20, love.graphics.getWidth(), "center") --draws the score onto the screen
 end
 
 local function getRooms()
