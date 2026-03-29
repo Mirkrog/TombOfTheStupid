@@ -22,7 +22,7 @@ function Coin:draw(scale)
 
 	local parent = self.parent
 
-	love.graphics.rectangle("fill", parent.x * scale - 0.5 * scale + 0.2 * scale, parent.y * scale - 0.5 * scale + 0.2 * scale,
+	love.graphics.rectangle("fill", (parent.x - 0.5 + inset) * scale, (parent.y - 0.5 + inset) * scale,
 							scale * (1 - inset * 2), scale * (1 - inset * 2))
 end
 

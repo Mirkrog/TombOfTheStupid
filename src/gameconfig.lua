@@ -11,7 +11,7 @@ config = {
 
 	scoreforlevelcomplete = 100,
 
-	levellenght = 20,
+	levellenght = 1,
 	minroomlength = 5,
 	maxroomlength = 15,
 

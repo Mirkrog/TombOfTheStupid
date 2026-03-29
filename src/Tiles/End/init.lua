@@ -10,7 +10,7 @@ function End:__tostring()
 end
 
 function End:draw(scale)
-	if os.clock() % 20 <= 10 then
+	if os.clock() % 0.3 <= 0.15 then
 		love.graphics.setColor(coloratlas.yellow)
 	else
 		love.graphics.setColor(coloratlas.purple)

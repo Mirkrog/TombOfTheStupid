@@ -15,7 +15,7 @@ function Infestion:new(parent)
 end
 
 function Infestion:draw(scale)
-	if os.clock() - self.age < self.primeage then
+	if os.clock() - self.age < self.primeage / 2 then
 		return
 	end
 
@@ -27,8 +27,11 @@ function Infestion:draw(scale)
 
 	local parent = self.parent
 
-	love.graphics.rectangle("fill", parent.x * scale - 0.5 * scale, parent.y * scale - 0.5 * scale,
-							scale, scale)
+	local fillamount = math.min(1, (os.clock() - self.age - 0.5) / (self.primeage / 2))
+
+	love.graphics.rectangle("fill", (parent.x - 0.5 + (1 - fillamount) * 0.5) * scale,
+						    (parent.y - 0.5 + (1 - fillamount) * 0.5) * scale,
+							scale * fillamount, scale * fillamount)
 end
 
 function Infestion:onParentTouched(player, triggeredneighbour)
@@ -36,7 +39,7 @@ function Infestion:onParentTouched(player, triggeredneighbour)
 		return
 	end
 	if not triggeredneighbour then
-		player:kill()
+		--player:kill()
 	end
 end
 
