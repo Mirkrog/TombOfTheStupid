@@ -5,12 +5,10 @@ local coloratlas = require("coloratlas")
 ---@class WallTile : Tile
 local Wall = Tile:extend()
 
-function Wall:new(x, y, r)
-	self.x = x 
-	self.y = y 
-	self.r = r 
+function Wall:new(x, y, r, parent)
+	Wall.super.new(self, x, y, r, level)
+	
 	self.collision = true
-	self.attributes = {}
 end
 
 function Wall:__tostring()

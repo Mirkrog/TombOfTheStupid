@@ -5,10 +5,14 @@ local Path = Tile:extend()
 
 function Path:new(x, y, r, level)
     Path.super.new(self, x, y, r, level)
+
+    self.steppedon = false
 end
 
 function Path:onTouch(player, triggeredneighbour)
 	if not triggeredneighbour then
+		self.steppedon = true
+
 		self:addAttribute("Infestion")
 	end
 end

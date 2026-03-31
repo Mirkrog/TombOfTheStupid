@@ -9,6 +9,7 @@ function Tile:new(x, y, r, level)
 	self.r = r 
 	self.collision = false
 	self.attributes = {}
+
 	self.level = level
 end
 
@@ -22,18 +23,27 @@ function Tile:draw(scale)
 end
 
 --Appends an instance of the named attribute to the list, used as builder function so they can be stacked
-function Tile:addAttribute(attributeName)
+function Tile:addAttribute(attributeName, canoverride, ...)
+	canoverride = canoverride or false
+
 	local newattribute = require("Attributes/" .. attributeName)
 	if not newattribute then
 		error("Attribute not found:" .. attributeName)
 	end
+
 	for i, attribute in pairs(self.attributes) do
 		if attribute:isExact(newattribute) then
-			return self
+			if canoverride then
+				table.remove(self.attributes, i)
+			else
+				return self
+			end
 		end
 	end
-	table.insert(self.attributes, newattribute(self))
-	return self
+	local attribute = newattribute(self, ...)
+	table.insert(self.attributes, attribute)
+
+	return self, attribute
 end
 
 function Tile:removeAttribute(targetAttribute)

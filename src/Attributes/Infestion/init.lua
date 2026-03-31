@@ -1,20 +1,65 @@
 local Attribute = require("Attributes/Attribute")
 
 local coloratlas = require("coloratlas")
+local gameconfig = require("gameconfig")
 
 --[[
 	Infests the level over time, preventing the player from waiting too long
 ]]
 local Infestion = Attribute:extend()
 
-function Infestion:new(parent)
+function Infestion:new(parent, reproductionsleft)
 	Infestion.super.new(self, parent)
 
-	self.age = os.clock()
-	self.primeage = 1 --time in seconds after which the infestion kills a player
+	self.reproductions = 10
+
+	self.reproductionsleft = reproductionsleft or self.reproductions --how far it can spread until it stops
+
+	local level = parent.level
+	local player = level.player
+
+	self.spreadspeed = 0.1
+	self.primeage = math.max(gameconfig.infestionmaxspreadspeed,
+							 gameconfig.initalinfestionspreadspeed
+							 / (player:getScore() * gameconfig.infestionspeedrampup)) --time in seconds after which the infestion kills a player
+	self.age = os.clock() + (self.reproductions - self.reproductionsleft) * self.spreadspeed
+
+	if self.reproductionsleft > 0 then
+		local directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}}
+		for i, direction in ipairs(directions) do
+			--the following checks prevent Infestion from blocking still required Path Tiles
+			if level:get(parent.x + direction[1],
+				parent.y + direction[2]).steppedon == false then
+				goto continue
+			end
+			for j, subdirection in ipairs(directions) do
+				if level:get(parent.x + direction[1] + subdirection[1],
+							parent.y + direction[2] + subdirection[2]).steppedon == false then
+					goto continue
+				end
+			end
+
+			level:get(parent.x + direction[1], parent.y + direction[2])
+					:addAttribute("Infestion", false, self.reproductionsleft - 1)
+			::continue::
+		end
+	end
 end
 
 function Infestion:draw(scale)
+	local level = self.parent.level
+	local directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}}
+	local alivetiles = 0
+	for i, direction in ipairs(directions) do
+		if level:get(self.parent.x + direction[1],
+			self.parent.y + direction[2]).steppedon == false then
+			alivetiles = alivetiles + 1
+		end
+	end
+	if alivetiles >= 2 then
+		self.age = os.clock() + self.primeage
+		return
+	end
 	if os.clock() - self.age < self.primeage / 2 then
 		return
 	end
@@ -27,7 +72,7 @@ function Infestion:draw(scale)
 
 	local parent = self.parent
 
-	local fillamount = math.min(1, (os.clock() - self.age - 0.5) / (self.primeage / 2))
+	local fillamount = math.max(0, math.min(1, (os.clock() - self.age - 0.5) / (self.primeage / 2)))
 
 	love.graphics.rectangle("fill", (parent.x - 0.5 + (1 - fillamount) * 0.5) * scale,
 						    (parent.y - 0.5 + (1 - fillamount) * 0.5) * scale,
@@ -39,7 +84,7 @@ function Infestion:onParentTouched(player, triggeredneighbour)
 		return
 	end
 	if not triggeredneighbour then
-		--player:kill()
+		player:kill()
 	end
 end
 

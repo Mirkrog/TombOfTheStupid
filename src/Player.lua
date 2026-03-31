@@ -82,7 +82,7 @@ local function ceilindir(n, dir)
 	elseif dir == -1 then
 		return math.floor(n)
 	else
-		error("Invalid direction" .. dir)
+		error("Invalid direction: " .. dir)
 	end
 end
 
@@ -162,8 +162,10 @@ function Player:update(dt)
 			self.lastbuffdirwrite = os.clock()
 		end
 	end
+
 	if self.dx == 0 and self.dy == 0 then
 		self.level:touchTile(self, self.x, self.y)
+		return --we can end early here as the player hasn't made any inputs so we don't have to calculate movement
 	end
 
 	local mx = self.dx * self.speed * dt

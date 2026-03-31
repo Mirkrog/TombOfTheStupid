@@ -8,6 +8,10 @@ local coloratlas = require("coloratlas")
 ---@class SpikeTile : Tile
 local Spike = Tile:extend()
 
+function Spike:new(x, y, r, parent)
+	Spike.super.new(self, x, y, r, parent)
+end
+
 function Spike:__tostring()
 	return "Spike" .. " At: " .. self.x .. self.y
 end

@@ -26,7 +26,6 @@ function SpikedTurn:generate(length)
 			self:cursorMoveForward()
 			self:cursorPlaceTileLeft("Wall")
 			self:cursorPlaceTileRight("Wall")
-			self:cursorPlaceTile("Path")
 			self:cursorMoveForward()
 			hasturned = true --preventing another turn
 		end

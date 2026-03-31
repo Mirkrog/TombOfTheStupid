@@ -32,6 +32,7 @@ function Level:update(dt)
 		if self.gencoroutine then
 			self.gencoroutine = nil
 		end
+		
 		self.player:update(dt)
 		self.camera:update(dt)
 	end
@@ -43,7 +44,10 @@ end
 
 function Level:get(x, y)
 	if self.grid[x] == nil then
-		return
+		self.grid[x] = {}
+	end
+	if self.grid[x][y] == nil then
+		self.grid[x][y] = require("Tiles/Tile")(x, y, 0, self)
 	end
 	return self.grid[x][y]
 end

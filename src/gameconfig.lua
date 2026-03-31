@@ -11,7 +11,7 @@ config = {
 
 	scoreforlevelcomplete = 100,
 
-	levellenght = 1,
+	levellenght = 20, --the lenght of a generated level
 	minroomlength = 5,
 	maxroomlength = 15,
 
@@ -20,6 +20,10 @@ config = {
 	roomgenyield = 1, --in which interval the roomgen coroutine yields
 	canroomsoverlap = false, --only for room gen debugging, has no fun factor
 	verboseroomgen = false,
+
+	initalinfestionspreadspeed = 5,
+	infestionspeedrampup = 0.05, --multiplier for how fast the infestion spreads depending on score
+	infestionmaxspreadspeed = 0.1, --cap of speed infestion can get
 }
 
 return config
