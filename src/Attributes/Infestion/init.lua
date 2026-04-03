@@ -5,6 +5,7 @@ local coloratlas = require("coloratlas")
 --[[
 	Infests the level over time, preventing the player from waiting too long
 ]]
+---Class Infestion : Attribute
 local Infestion = Attribute:extend()
 
 function Infestion:new(parent)
@@ -39,7 +40,7 @@ function Infestion:onParentTouched(player, triggeredneighbour)
 		return
 	end
 	if not triggeredneighbour then
-		--player:kill()
+		player:kill()
 	end
 end
 

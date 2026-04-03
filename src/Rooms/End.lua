@@ -12,14 +12,12 @@ function End:generate(length)
 		self:cursorPlaceTileRight("wall")
 		if i == 1 then
 			self:cursorPlaceTile("Path"):addAttribute("Coin")
+			self:cursorMoveForward()
 		else
 			self:cursorPlaceTile("End")
 		end
 		self:cursorPlaceTileFront("wall")
-		self:cursorMoveForward()
 	end
-	self:cursorPlaceTileLeft("Wall")
-	self:cursorPlaceTileRight("wall")
 end
 
 function End:__tostring()

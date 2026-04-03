@@ -13,16 +13,12 @@ function SpikedTurn:generate(length)
 	for i = 1, length + 1 do
 		if not hasturned and i > math.floor(length / 2) then
 			if math.random(0, 1) == 0 then --decides if the turn goes left or right
-				self:cursorPlaceTileFrontLeft("Wall")
 				self:cursorTurnRight()
 			else
-				self:cursorPlaceTileFrontRight("Wall")
 				self:cursorTurnLeft()
 			end
 			self:cursorMoveBackwards(2) --we move back 2 to place a spike there
 			self:cursorPlaceTile("Spike", self:cursorGetRot())
-			self:cursorPlaceTileLeft("Wall")
-			self:cursorPlaceTileRight("Wall")
 			self:cursorMoveForward()
 			self:cursorPlaceTileLeft("Wall")
 			self:cursorPlaceTileRight("Wall")

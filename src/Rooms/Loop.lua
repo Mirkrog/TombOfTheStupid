@@ -22,10 +22,8 @@ function Loop:generate(length)
 	for i = 1, length do
 		if i > 1 and (i - 1) % sidelength == 0 and i < looplength then
 			if turndirection == 1 then
-				self:cursorPlaceTileFrontLeft("wall")
 				self:cursorTurnRight()
 			else
-				self:cursorPlaceTileFrontRight("wall")
 				self:cursorTurnLeft()
 			end
 			self:cursorPlaceTileBack("wall")

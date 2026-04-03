@@ -8,8 +8,6 @@ local Start = Room:extend()
 
 function Start:generate(length)
 	self:cursorPlaceTileBack("wall")
-	self:cursorPlaceTileBackLeft("wall")
-	self:cursorPlaceTileBackRight("wall")
 	self:cursorPlaceTileLeft("wall")
 	self:cursorPlaceTileRight("wall")
 	self:cursorPlaceTile("Path")

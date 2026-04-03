@@ -5,6 +5,7 @@ local Object = require("classic/classic")
 	If the Level was a entity component system this would be a component of an entity(Tile)
 	Also acts as a debug marker.
 ]]
+---Class Attribute : Object
 local Attribute = Object:extend()
 
 function Attribute:new(parent)

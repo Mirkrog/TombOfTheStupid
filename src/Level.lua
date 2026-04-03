@@ -100,14 +100,22 @@ function Level:draw()
 	end
 	local clock = os.clock()
 
-	self.camera:apply(50)
+	self.camera:apply(gameconfig.drawscale)
 
-	for x, rows in pairs(self.grid) do
-		for y, tile in pairs(rows) do
+	--these define the distance at which tiles aren't rendered anymore
+	local clipdistancex = math.ceil((love.graphics:getWidth() / gameconfig.drawscale) / 2)
+	local clipdistancey = math.ceil((love.graphics:getHeight() / gameconfig.drawscale) / 2)
+
+	local camx = self.camera:getX()
+	local camy = self.camera:getY()
+
+	for x = math.floor(camx) - clipdistancex, math.ceil(camx) + clipdistancex do
+		for y = math.floor(camy) - clipdistancey, math.ceil(camy) + clipdistancey do
 			if gameconfig.waveeffect then
 				love.graphics.push()
 				love.graphics.translate(0, math.sin(x + clock * 3) * 3) --cool Effect I guess, might cause nausea
 			end
+			local tile = self:get(x, y)
 			if tile then
 				tile:draw(gameconfig.drawscale)
 				for i, attribute in ipairs(tile.attributes) do

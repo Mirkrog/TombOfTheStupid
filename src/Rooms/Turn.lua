@@ -13,10 +13,8 @@ function Turn:generate(length)
 	for i = 1, length do
 		if not hasturned and i > math.floor(length / 2) then
 			if math.random(0, 1) == 0 then
-				self:cursorPlaceTileFrontLeft("Wall")
 				self:cursorTurnRight()
 			else
-				self:cursorPlaceTileFrontRight("Wall")
 				self:cursorTurnLeft()
 			end
 			self:cursorPlaceTileBack("Wall")

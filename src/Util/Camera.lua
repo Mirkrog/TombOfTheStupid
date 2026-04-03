@@ -25,6 +25,18 @@ function Camera:setTarget(target)
 	self.target = target
 end
 
+function Camera:getPos()
+	return self.x, self.y
+end
+
+function Camera:getX()
+	return self.x
+end
+
+function Camera:getY()
+	return self.y
+end
+
 function Camera:move(x, y)
 	self.x = self.x + x 
 	self.y = self.y + y
@@ -32,7 +44,7 @@ end
 
 function Camera:update(dt)
 	if self.target then
-		self.x = self.x + (self.target.x - self.x) * self.lerp 
+		self.x = self.x + (self.target.x - self.x) * self.lerp
 		self.y = self.y + (self.target.y - self.y) * self.lerp
 	end
 end

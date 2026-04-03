@@ -4,14 +4,15 @@
 
 config = {
 	nocollision = false,
-	enforcemovementrestrictions = true, -- makes collision unreliable
+	enforcemovementrestrictions = true, --makes collision unreliable
 	waveeffect = false, --very cool ;)
 
-	drawscale = 50, -- scale in which the game(Level, Player) is drawn
+	drawscale = 50, --scale in which the game(Level, Player) is drawn
+	tilescale = 16, --size of the Textures for the Game in Pixels
 
 	scoreforlevelcomplete = 100,
 
-	levellenght = 1,
+	levellenght = 20,
 	minroomlength = 5,
 	maxroomlength = 15,
 
