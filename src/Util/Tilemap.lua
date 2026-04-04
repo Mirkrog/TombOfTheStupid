@@ -17,15 +17,17 @@ function Tilemap:new(imgPath, tileWidthX, tileWidthY, filterMode)
 	self.quad = love.graphics.newQuad(0, 0, tileWidthX, tileWidthY, self.image:getWidth(), self.image:getHeight())
 end
 
-function Tilemap:drawTile(tileX, tileY, x, y, r, sx, sy)
+function Tilemap:drawTile(tileX, tileY, x, y, r, sx, sy, ox, oy)
 	r = r or 0
 	sx = sx or 1
 	sy = sy or 1
+	ox = ox or 0
+	oy = oy or 0
 
 	self.quad:setViewport(tileX * self.tilewidthx, tileY * self.tilewidthy,
 						  self.tilewidthx, self.tilewidthy, self.image:getWidth(), self.image:getHeight())
 
-	love.graphics.draw(self.image, self.quad, x, y, r, sx / self.tilewidthx, sy / self.tilewidthy)
+	love.graphics.draw(self.image, self.quad, x, y, r, sx / self.tilewidthx, sy / self.tilewidthy, ox, oy)
 end
 
 function Tilemap:__tostring()

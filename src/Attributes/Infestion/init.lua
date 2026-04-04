@@ -40,7 +40,7 @@ function Infestion:onParentTouched(player, triggeredneighbour)
 		return
 	end
 	if not triggeredneighbour then
-		player:kill()
+		--player:kill()
 	end
 end
 
